@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  div.container
+      h1 Connexion
+      form(action="/login" method="POST")
+      div.form-group
+          label(for="name") Nom
+          input(type="name" id="name" name="name" placeholder="Entrez votre nom" required)
+        div.form-group
+          label(for="email") Adresse e-mail
+          input(type="email" id="email" name="email" placeholder="Entrez votre e-mail" required)
+        div.form-group
+          label(for="password") Mot de passe
+          input(type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required)
+        div.form-group
+          button(type="submit") Se connecter
+        div.form-footer
+          p Vous n'avez pas de compte ? 
+            a(href="/register") Inscrivez-vous ici
