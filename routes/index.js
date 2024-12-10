@@ -8,7 +8,7 @@ const lessonRoute = require('./lesson')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Knowledge Learning' });
+  res.status(200).json({ message: 'Endpoint actif !' });
 });
 
 router.use('/user', userRoute)
