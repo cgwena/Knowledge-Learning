@@ -45,6 +45,16 @@ exports.authenticate = async (req, res, next) => {
   }
 };
 
+// Obtenir toutes les leçons
+exports.getAll = async (req, res) => {
+  try {
+    const UserList = await User.find()
+    return res.status(200).json(UserList);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 exports.getById = async (req, res, next) => {
   const id = req.params.id;
 
