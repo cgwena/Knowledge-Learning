@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { loginUser } from "@/services/user.service.js";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -43,6 +43,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("auth", ["login"]),
     async handleLogin() {
       this.error = null; // Réinitialise les erreurs
       if (!this.email || !this.password) {
@@ -51,19 +52,17 @@ export default {
       }
 
       try {
-        // Exemple de requête API
-        const response = await loginUser(this.email, this.password);
-        this.user = response.user; // Assurez-vous de manipuler la réponse correctement selon votre API
-        
-        if (!response.token) {
+        const response = await this.login({
+          email: this.email,
+          password: this.password,
+        });
+
+        if (response.data.token) {
+          // Le token est automatiquement géré dans Vuex et localStorage
+          this.$router.push("/themes"); // Rediriger vers la page suivante
+        } else {
           throw new Error("Identifiants invalides.");
         }
-
-        const token = await response.token;
-        console.log("Connexion réussie :", token);
-
-        // Redirection ou mise à jour de l'état utilisateur
-        this.$router.push("/dashboard");
       } catch (err) {
         this.error = err.message || "Une erreur est survenue.";
       }

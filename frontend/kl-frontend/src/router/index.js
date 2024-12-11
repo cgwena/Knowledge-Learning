@@ -1,15 +1,22 @@
 // src/router.js
 import { createRouter, createWebHistory } from 'vue-router'; // Importation des fonctions nécessaires
-import Home from './views/Home.vue'; // Importation des vues
-//import Dashboard from './views/Dashboard.vue'; // Exemple d'autre vue
-//import Login from './views/Login.vue'; // Exemple de vue de connexion
-import NotFound from './views/NotFound.vue'; // Vue pour la page 404
+import store from '../store'; 
+import Home from '@/views/Home.vue'; 
+//import Dashboard from './views/Dashboard.vue';
+//import Login from './views/Login.vue';
+import NotFound from '@/views/NotFound.vue'; 
+import Themes from '@/views/Themes.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home, // Composant associé à la route d'accueil
+  },
+  {
+    path: '/themes',
+    name: 'ThemesPage',
+    component: Themes, // Lien vers la page des thèmes
   },
 //   {
 //     path: '/dashboard',
@@ -36,12 +43,11 @@ const router = createRouter({
 
 // Ajout d'un garde de navigation pour gérer les routes protégées
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !localStorage.getItem('authToken')) {
-    // Si la route nécessite une authentification et qu'il n'y a pas de token d'authentification
-    next({ name: 'Login' }); // Rediriger vers la page de login
-  } else {
-    next(); // Permet de continuer la navigation
-  }
-});
+    if (to.meta.requiresAuth && !store.getters['auth.isAuthenticated']) {
+      next({ name: 'Login' }); // Rediriger vers la page de login si l'utilisateur n'est pas authentifié
+    } else {
+      next(); // Permet de continuer la navigation
+    }
+  });
 
 export default router;
