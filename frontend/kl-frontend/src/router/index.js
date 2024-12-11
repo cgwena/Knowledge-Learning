@@ -1,11 +1,13 @@
 // src/router.js
+
 import { createRouter, createWebHistory } from 'vue-router'; // Importation des fonctions nécessaires
 import store from '../store'; 
 import Home from '@/views/Home.vue'; 
-//import Dashboard from './views/Dashboard.vue';
+import DashBoard from '@/views/DashBoard.vue';
 //import Login from './views/Login.vue';
 import NotFound from '@/views/NotFound.vue'; 
 import Themes from '@/views/Themes.vue';
+import Login from '@/views/Login.vue';
 
 const routes = [
   {
@@ -18,17 +20,17 @@ const routes = [
     name: 'ThemesPage',
     component: Themes, // Lien vers la page des thèmes
   },
-//   {
-//     path: '/dashboard',
-//     name: 'Dashboard',
-//     component: Dashboard, // Composant associé à la route du tableau de bord
-//     meta: { requiresAuth: true }, // Exemple de route protégée
-//   },
-//   {
-//     path: '/login',
-//     name: 'Login',
-//     component: Login, // Composant associé à la route de connexion
-//   },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashBoard, // Composant associé à la route du tableau de bord
+    //meta: { requiresAuth: true }, // Exemple de route protégée
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login, // Composant associé à la route de connexion
+  },
   {
     path: '/:catchAll(.*)', // Route pour toutes les autres pages non trouvées
     name: 'NotFound',
