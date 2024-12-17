@@ -10,16 +10,26 @@
       <li v-else>
         <a href="/login">Se connecter</a>
       </li>
+      <li v-if="isAuthenticated" @click="logout">
+          Se déconnecter
+      </li>
     </ul>
   </nav>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+  
   name: "NavBar",
   computed: {
-    isAuthenticated() {
-      return this.$store.getters["auth/isAuthenticated"];
+    ...mapGetters("auth", ["isAuthenticated"]), // Vérifie si l'utilisateur est authentifié
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("auth/logout"); // Appelle l'action de déconnexion
+      this.$router.push("/login"); // Redirige vers la page de connexion après déconnexion
     },
   },
 };
@@ -58,7 +68,8 @@ a {
   color: var(--color1);
 }
 
-a:hover {
+li:hover {
   font-weight: bold;
+  cursor: pointer;
 }
 </style>

@@ -6,7 +6,6 @@ const Lesson = new Schema({
     text: { type: String, required: true},
     video_url: { type : String},
     price: { type : Number, required: true},
-    cursus: [{ type: Schema.Types.ObjectId, ref: 'Cursus' }],
 })
 
 module.exports = mongoose.model('Lesson', Lesson)

@@ -25,7 +25,7 @@ const mutations = {
 
 const actions = {
   async login({ commit }, { email, password }) {
-    const response = await axiosInstance.post("/api/users/authenticate", { email, password });
+    const response = await axiosInstance.post("/api/user/authenticate", { email, password });
     
     if (response.data.token) {
       localStorage.setItem("authToken", response.data.token); // Sauvegarder le token dans localStorage

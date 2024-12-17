@@ -26,7 +26,7 @@ export default {
 
 * {
   box-sizing: border-box;
-  background-color: var(--color1);
+  /* border: 1px solid red; */
 }
 
 #app {
@@ -36,6 +36,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+   background-color: var(--color1);
 }
 
 main {

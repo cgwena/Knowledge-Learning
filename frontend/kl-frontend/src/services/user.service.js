@@ -19,7 +19,7 @@ export const registerUser = async (userData) => {
 // Fonction pour se connecter
 export const loginUser = async (email, password) => {
 
-    const response = await axiosInstance.post('/api/users/authenticate', { email, password });
+    const response = await axiosInstance.post('/api/user/authenticate', { email, password });
     return response; // Retourne la réponse de la connexion
     
 
