@@ -9,5 +9,6 @@ router.get('/:id', private.checkJWT, service.getById);
 router.post('/add', service.add)
 router.put('/:id', private.checkJWT, service.update)
 router.delete('/:id', private.checkJWT, service.delete)
+router.post('/add-cursus', service.addCursusToTheme);
 
 module.exports = router;
