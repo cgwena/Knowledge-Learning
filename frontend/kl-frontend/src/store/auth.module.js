@@ -38,7 +38,9 @@ const actions = {
     }
   },
   logout({ commit }) {
-    localStorage.removeItem("authToken"); // Supprimer le token de localStorage
+    localStorage.removeItem("authToken"); 
+    localStorage.removeItem("cartItems")
+    localStorage.removeItem("cartTotal")
     commit("LOGOUT"); // Réinitialiser l'état de l'authentification dans Vuex
   },
 };

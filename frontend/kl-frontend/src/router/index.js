@@ -8,6 +8,7 @@ import DashBoard from '@/views/DashBoard.vue';
 import NotFound from '@/views/NotFound.vue'; 
 import Themes from '@/views/Themes.vue';
 import Login from '@/views/Login.vue';
+import Cart from '@/views/Cart.vue';
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login, // Composant associé à la route de connexion
+  },
+  {
+    path: "/cart",
+    name: "cart",
+    component: Cart,
   },
   {
     path: '/:catchAll(.*)', // Route pour toutes les autres pages non trouvées

@@ -9,6 +9,7 @@
         v-for="cursus in theme.cursus"
         :key="cursus.id"
         :cursus="cursus"
+        @add-to-cart="$emit('add-to-cart', $event)"
       />
     </div>
     <p v-else>Pas de cursus associés à ce thème.</p>

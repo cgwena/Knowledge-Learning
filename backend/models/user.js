@@ -22,6 +22,9 @@ const User = new Schema({
     password: {
         type: String,
         trim: true
+    }, 
+    lessons: {
+        type: Array
     }
 }, {
     timestamps: true
