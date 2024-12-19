@@ -6,7 +6,7 @@
     :ripple="true"
     :loading="isLoading"
     :disabled="isDisabled"
-    @Click="$emit('btn-click')"
+    @click="$emit('btn-click')"
   >
     {{ textContent }}
     <img v-if="send" src="@/assets/icons/arrow-right.svg" />
@@ -102,8 +102,11 @@ export default {
   height: 32px;
   border-radius: 5px;
   border: 1px solid var(--color3);
-  box-shadow: none;
-  
+  box-shadow: none; 
+}
+
+.custom-v-btn:hover{
+  cursor: pointer;
 }
 
 .white-text {

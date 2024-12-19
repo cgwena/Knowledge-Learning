@@ -7,7 +7,7 @@
           class="button"
           btnColor="primary"
           textContent="Acheter le cours"
-        />
+          @click="handleAddToCart(lesson)" />
       </li>
     </ul>
     <p v-else>Pas de leçons disponibles pour ce cursus.</p>
@@ -26,6 +26,12 @@ export default {
     lessons: {
       type: Array,
       required: true,
+    },
+  },
+  methods: {
+    handleAddToCart(lesson) {
+      console.log("Ajout au panier depuis LessonList:", lesson);
+      this.$emit("add-to-cart", lesson);
     },
   },
 };

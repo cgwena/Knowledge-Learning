@@ -17,6 +17,7 @@
           v-for="theme in themes"
           :key="theme.id"
           :theme="theme"
+          @add-to-cart="handleAddToCart"
         />
       </div>
     </div>
@@ -24,9 +25,11 @@
 </template>
 
 <script>
-import NavBar from "@/components/layout/NavBar.vue";
+import NavBar from "@/components/layout/Navbar.vue";
 import ThemeCard from "@/components/cours/ThemeCard.vue";
 import { getThemes } from "@/services/lesson.service";
+import { mapActions } from "vuex";
+
 
 export default {
   name: "ThemesPage",
@@ -36,22 +39,34 @@ export default {
   },
   data() {
     return {
-      themes: [], // Liste des thèmes récupérés
-      cursus: [],
-      error: null, // Pour afficher les erreurs
+      themes: [],
+      error: null,
     };
   },
   async created() {
     try {
       this.themes = await getThemes(); // Appel du service pour récupérer les thèmes
-      console.log('themes', this.themes)
     } catch (err) {
       this.error = "Une erreur est survenue lors du chargement des thèmes.";
     }
   },
   computed: {
+    cartItems() {
+      return this.$store.getters["cart/cartItems"];
+    },
+    cartTotal() {
+      return this.$store.getters["cart/cartTotal"];
+    },
     isAuthenticated() {
       return this.$store.getters["auth/isAuthenticated"];
+    },
+  },
+  
+  methods: {
+    ...mapActions("cart", ["addToCart", "removeFromCart"]),
+    handleAddToCart(item) {
+      console.log("Ajout au panier:", item);
+      this.$store.dispatch("cart/addToCart", item);  // Assurez-vous d'utiliser dispatch pour appeler l'action
     },
   },
 };

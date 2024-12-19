@@ -10,6 +10,9 @@
       <li v-else>
         <a href="/login">Se connecter</a>
       </li>
+      <li v-if="isAuthenticated">
+        <a href="/cart">Mon panier</a>
+      </li>
       <li v-if="isAuthenticated" @click="logout">
           Se déconnecter
       </li>

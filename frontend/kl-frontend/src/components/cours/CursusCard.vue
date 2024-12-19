@@ -3,11 +3,15 @@
     <h3>{{ cursus.title }} ({{ cursus.price }} €)</h3>
 
     <!-- Liste des leçons associées -->
-    <LessonList :lessons="cursus.lessons" />
+    <LessonList
+      :lessons="cursus.lessons"
+      @add-to-cart="$emit('add-to-cart', $event)"
+    />
     <ActionButton
       class="button"
       btnColor="primary"
       textContent="Acheter le cursus complet"
+      @click="handleAddToCart(cursus)"
     />
   </div>
 </template>
@@ -27,6 +31,12 @@ export default {
   components: {
     LessonList,
     ActionButton,
+  },
+  methods: {
+    handleAddToCart(cursus) {
+      console.log("Ajout au panier depuis CursusCard:", cursus);
+      this.$emit("add-to-cart", cursus);
+    },
   },
 };
 </script>
