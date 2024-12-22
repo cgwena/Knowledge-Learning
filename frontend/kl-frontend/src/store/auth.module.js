@@ -1,7 +1,7 @@
 import axiosInstance from "axios";
 
 const state = {
-  token: localStorage.getItem("authToken") || "", // Récupérer le token de localStorage si existant
+  token: localStorage.getItem("token") || "", // Récupérer le token de localStorage si existant
   user: null, // Vous pouvez stocker les informations de l'utilisateur ici si nécessaire
 };
 
@@ -25,16 +25,36 @@ const mutations = {
 
 const actions = {
   async login({ commit }, { email, password }) {
-    const response = await axiosInstance.post("/api/user/authenticate", { email, password });
-    
-    if (response.data.token) {
-      localStorage.setItem("authToken", response.data.token); // Sauvegarder le token dans localStorage
-      commit("SET_TOKEN", response.data.token); // Mettre à jour l'état du token dans Vuex
+    try {
+      const response = await axiosInstance.post("/api/user/authenticate", { email, password });
 
-      // Optionnel : récupérer les informations de l'utilisateur
-      commit("SET_USER", response.data.user); // Vous pouvez ajuster cette ligne selon votre API
+      if (response && response.data) {
+        const token = response.data.token;
+        const user = response.data.user;
 
-      return response;
+        if (token) {
+          localStorage.setItem("token", token);
+          commit("SET_TOKEN", token);
+          commit("SET_USER", user);
+          console.log("Token stocké avec succès :", token);
+
+          // Vérifier que le token est stocké
+          const storedToken = localStorage.getItem("token");
+          if (storedToken) {
+            console.log("Vérification réussie : Token trouvé dans localStorage !");
+          } else {
+            console.error("Vérification échouée : Aucun token trouvé dans localStorage.");
+          }
+        } else {
+          console.error("Token non fourni par l'API.");
+        }
+      } else {
+        console.error("Réponse de l'API invalide", response);
+      }
+      return response
+    } catch (error) {
+      console.error("Erreur lors de la connexion:", error);
+      // Vous pouvez gérer les erreurs spécifiques comme les erreurs de réseau ou d'authentification ici
     }
   },
   logout({ commit }) {

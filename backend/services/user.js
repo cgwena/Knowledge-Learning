@@ -45,7 +45,7 @@ exports.authenticate = async (req, res, next) => {
   }
 };
 
-// Obtenir toutes les leçons
+// Obtenir tous les users
 exports.getAll = async (req, res) => {
   try {
     const UserList = await User.find()

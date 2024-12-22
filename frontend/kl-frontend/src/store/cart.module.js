@@ -22,6 +22,12 @@ export default {
         localStorage.setItem("cartTotal", state.cartTotal);
       }
     },
+    CLEAR_CART(state) {
+      state.cartItems = [];
+      state.cartTotal = 0;
+      localStorage.removeItem("cartItems");
+      localStorage.removeItem("cartTotal");
+    },
   },
   actions: {
     addToCart({ commit }, item) {
@@ -29,6 +35,9 @@ export default {
     },
     removeFromCart({ commit }, item) {
       commit("REMOVE_FROM_CART", item);
+    },
+    clearCart({ commit }) {
+      commit("CLEAR_CART");
     },
   },
   getters: {

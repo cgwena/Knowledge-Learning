@@ -1,9 +1,10 @@
 const Order = require("../models/order");
 const Lesson = require("../models/lesson");
 const Cursus = require("../models/cursus");
+const mongoose = require('mongoose');
 
 exports.createOrder = async (req, res) => {
-  const { userId, items } = req.body;
+  const { items } = req.body;
 
   try {
     // Validation des items
@@ -30,7 +31,7 @@ exports.createOrder = async (req, res) => {
 
     // Création de la commande
     const order = await Order.create({
-      user: userId,
+      user: req.decoded.id,
       items: validatedItems,
       totalPrice,
     });
@@ -52,6 +53,28 @@ exports.getOrdersByUser = async (req, res) => {
     return res.status(200).json(orders);
   } catch (error) {
     return res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getOrderById = async (req, res) => {
+  const { orderId } = req.params;
+
+  // Vérifiez si orderId est un ObjectId valide
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
+    return res.status(400).json({ error: "Invalid Order ID" });
+  }
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    return res.status(200).json(order);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 

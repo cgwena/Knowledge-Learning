@@ -9,6 +9,7 @@ import NotFound from '@/views/NotFound.vue';
 import Themes from '@/views/Themes.vue';
 import Login from '@/views/Login.vue';
 import Cart from '@/views/Cart.vue';
+import OrderRecap from '@/views/Payment.vue'
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: "/cart",
     name: "cart",
     component: Cart,
+  },
+  {
+    path: "/payment/:orderId",
+    name: "orderRecap",
+    component: OrderRecap,
   },
   {
     path: '/:catchAll(.*)', // Route pour toutes les autres pages non trouvées

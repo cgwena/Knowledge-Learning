@@ -27,11 +27,11 @@
         <div class="cart-total">
           <h3>Total: {{ cartTotal }} €</h3>
           <ActionButton
-              class="button"
-              btnColor="primary"
-              textContent="Payer"
-              @click="checkout"
-            />
+            class="button"
+            btnColor="primary"
+            textContent="Passer la commande"
+            @click="checkout"
+          />
         </div>
       </div>
     </div>
@@ -42,6 +42,7 @@
 import NavBar from "@/components/layout/Navbar.vue";
 import ActionButton from "@/components/ActionButton.vue";
 import { mapActions } from "vuex";
+import { createOrder } from "@/services/order.service";
 
 export default {
   name: "CartPage",
@@ -62,9 +63,29 @@ export default {
   },
   methods: {
     ...mapActions("cart", ["removeFromCart"]),
-    checkout() {
-      // Logique de redirection ou de traitement de commande
-      console.log("Passer à la commande");
+    async checkout() {
+      console.log("cartItems", this.cartItems);
+      const items = this.cartItems.map((item) => {
+        const type = item.lessons ? "cursus" : "lesson"; // Si l'objet a des leçons, c'est un cursus
+        return {
+          itemId: item._id,
+          type, 
+        };
+      });
+      const orderData = {
+        items,
+        totalPrice: this.cartTotal,
+      };
+      try {
+        const response = await createOrder(orderData);
+
+        // Vider le panier
+        const orderId = response.data._id
+        // Rediriger vers la page récapitulative
+        this.$router.push(`/payment/${orderId}`);
+      } catch (error) {
+        console.error("Erreur lors de la création de la commande:", error);
+      }    
     },
   },
 };

@@ -1,6 +1,6 @@
 import axiosInstance from 'axios';
 
-const apiUrl = 'http://localhost:3000/theme/'; // Remplacez par votre URL d'API
+const apiUrl = 'http://localhost:3000/theme'; // Remplacez par votre URL d'API
 
 export const getThemes = async () => {
   try {
@@ -11,3 +11,23 @@ export const getThemes = async () => {
     throw error; // Lance l'erreur pour qu'elle soit gérée par le composant
   }
 };
+
+export const fetchCursusById = async(id) => {
+  const token = localStorage.getItem("token");
+  const response = await axiosInstance.get(`http://localhost:3000/cursus/${id}`,{
+    headers: {
+        Authorization: `Bearer ${token}`, // Envoyer le token dans les en-têtes
+      },
+  });
+  return response.data
+}
+
+export const fetchLessonById = async(id) => {
+  const token = localStorage.getItem("token");
+  const response = await axiosInstance.get(`http://localhost:3000/lesson/${id}`,{
+    headers: {
+        Authorization: `Bearer ${token}`, // Envoyer le token dans les en-têtes
+      },
+  });
+  return response.data
+}
