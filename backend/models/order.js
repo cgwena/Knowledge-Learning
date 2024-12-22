@@ -11,7 +11,7 @@ const OrderSchema = new Schema({
         required: true,
       },
       itemId: { type: Schema.Types.ObjectId, required: true }, // ID de la leçon ou du cursus
-      price: { type: Number, required: true }, // Prix de l'item
+      // price: { type: Number, required: true }, // Prix de l'item
     },
   ],
   totalPrice: { type: Number, required: true },
