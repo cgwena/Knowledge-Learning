@@ -8,6 +8,7 @@ const state = {
 const getters = {
   isAuthenticated: (state) => !!state.token, // Vérifie si l'utilisateur est authentifié
   getUser: (state) => state.user, // Récupère l'utilisateur
+  userLessons: (state) => state.user?.lessons || [],
 };
 
 const mutations = {
@@ -21,22 +22,30 @@ const mutations = {
     state.token = "";
     state.user = null;
   },
+  SET_USER_LESSONS(state, lessons) {
+    console.log('state.user', state.user)
+    if (state.user) {
+      state.user.lessons = lessons;
+    }
+  },
 };
 
 const actions = {
   async login({ commit }, { email, password }) {
     try {
       const response = await axiosInstance.post("/api/user/authenticate", { email, password });
-
+      console.log(response)
       if (response && response.data) {
         const token = response.data.token;
         const user = response.data.user;
+        console.log('user', user)
 
         if (token) {
           localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(user));          
           commit("SET_TOKEN", token);
           commit("SET_USER", user);
-          console.log("Token stocké avec succès :", token);
+          
 
           // Vérifier que le token est stocké
           const storedToken = localStorage.getItem("token");
@@ -63,6 +72,51 @@ const actions = {
     localStorage.removeItem("cartTotal")
     commit("LOGOUT"); // Réinitialiser l'état de l'authentification dans Vuex
   },
+  async fetchUserById({ commit }, userId) {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axiosInstance.get(`/api/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      commit("SET_USER", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Erreur lors de la récupération de l'utilisateur :", error);
+      throw error;
+    }
+  },
+  async fetchUserLessons({ commit }) {
+    try {
+      // Récupération du jeton d'authentification et de l'ID utilisateur
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId = user?._id;
+  
+      if (!token || !userId) {
+        throw new Error("Jeton ou ID utilisateur manquant.");
+      }
+  
+      // Requête pour récupérer les leçons
+      const response = await axiosInstance.get(`/api/users/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      console.log('response', response)
+      // Vérification de la réponse
+      if (response.data && response.data.lessons) {
+        const lessons = response.data.lessons;
+        commit("SET_USER_LESSONS", lessons); // Assurez-vous que les leçons sont bien envoyées au store
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des leçons :", error);
+    }
+  }
+  
 };
 
 export default {

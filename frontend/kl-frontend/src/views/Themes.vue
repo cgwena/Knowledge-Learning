@@ -29,13 +29,13 @@ import NavBar from "@/components/layout/Navbar.vue";
 import ThemeCard from "@/components/cours/ThemeCard.vue";
 import { getThemes } from "@/services/lesson.service";
 import { mapActions } from "vuex";
-
+import { toast } from "vue3-toastify";
 
 export default {
   name: "ThemesPage",
   components: {
     NavBar,
-    ThemeCard
+    ThemeCard,
   },
   data() {
     return {
@@ -61,12 +61,47 @@ export default {
       return this.$store.getters["auth/isAuthenticated"];
     },
   },
-  
+
   methods: {
     ...mapActions("cart", ["addToCart", "removeFromCart"]),
-    handleAddToCart(item) {
-      console.log("Ajout au panier:", item);
-      this.$store.dispatch("cart/addToCart", item);  // Assurez-vous d'utiliser dispatch pour appeler l'action
+    async handleAddToCart(item) {
+      try {
+        // Récupérer l'utilisateur et ses leçons
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userId = user._id;
+
+        const response = await this.$store.dispatch(
+          "auth/fetchUserById",
+          userId
+        ); // Assurez-vous d'avoir une action pour ça
+        const purchasedLessons = response.lessons || [];
+
+        console.log("purchased lessons", purchasedLessons);
+        console.log("item", item._id);
+        if (purchasedLessons.includes(item._id)) {
+          toast.warning(`La leçon "${item.title}" a déjà été achetée.`);
+          return;
+        }
+
+        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        console.log("cartItems", cartItems);
+
+        const isInCart = cartItems.some(
+          (cartItem) => cartItem._id === item._id
+        );
+        if (isInCart) {
+          toast.warning(
+            `La leçon "${item.title}" a déjà été ajoutée au panier.`
+          );
+          return;
+        }
+
+        console.log("Ajout au panier:", item);
+        this.$store.dispatch("cart/addToCart", item);
+        toast.success(`La leçon "${item.title}" a été ajoutée au panier`);
+      } catch (error) {
+        console.error("Erreur lors de l'ajout au panier :", error);
+      }
     },
   },
 };

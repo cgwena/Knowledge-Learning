@@ -38,7 +38,7 @@ exports.authenticate = async (req, res, next) => {
     res.header("Authorization", "Bearer " + token);
 
     // Réponse de succès
-    return res.status(200).json({ message: "Authenticate_succeed", token });
+    return res.status(200).json({ message: "Authenticate_succeed", token, user });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
@@ -48,7 +48,7 @@ exports.authenticate = async (req, res, next) => {
 // Obtenir tous les users
 exports.getAll = async (req, res) => {
   try {
-    const UserList = await User.find()
+    const UserList = await User.find();
     return res.status(200).json(UserList);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -88,12 +88,12 @@ exports.add = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   const id = req.params.id;
-  const temp = {
-    name: req.body.name,
-    firstname: req.body.firstname,
-    email: req.body.email,
-    password: req.body.password,
-  };
+  const temp = {};
+  if (req.body.name) temp.name = req.body.name;
+  if (req.body.firstname) temp.firstname = req.body.firstname;
+  if (req.body.email) temp.email = req.body.email;
+  if (req.body.password) temp.password = req.body.password;
+  if (req.body.lessons) temp.lessons = req.body.lessons;
 
   try {
     let user = await User.findOne({ _id: id });

@@ -17,10 +17,11 @@
         </ul>
         <h3>Total : {{ order.totalPrice }} €</h3>
         <ActionButton
-        class="button"
-            btnColor="primary"
-            textContent="Payer"
-            @click="handlePayOrder(order._id)" />
+          class="button"
+          btnColor="primary"
+          textContent="Payer"
+          @click="handlePayOrder(order._id)"
+        />
       </div>
     </main>
   </div>
@@ -29,23 +30,23 @@
 <script>
 import ActionButton from "@/components/ActionButton.vue";
 import { getOrderById, payOrder } from "@/services/order.service";
-import { fetchCursusById, fetchLessonById } from "@/services/lesson.service"; // Ajoutez les services pour récupérer les détails
-
+import { fetchCursusById, fetchLessonById } from "@/services/lesson.service";
+import { updateUserInfo } from "@/services/user.service";
 
 export default {
   name: "OrderRecap",
   components: {
-    ActionButton
+    ActionButton,
   },
   data() {
     return {
       order: null,
-      orderId: null
+      orderId: null,
     };
   },
   async created() {
     const { orderId } = this.$route.params;
-    
+
     try {
       const response = await getOrderById(orderId);
       this.order = response.data;
@@ -56,11 +57,27 @@ export default {
   },
   methods: {
     async handlePayOrder(orderId) {
+      const user = JSON.parse(localStorage.getItem("user"));
+      console.log("user", user);
+      const currentLessons = user.lessons || [];
+      console.log("currentLessons", currentLessons);
+      const userId = user._id;
+      const lessonsIds = this.order.items.map((item) => item.itemId);
       try {
+        const updatedLessons = [...new Set([...currentLessons, ...lessonsIds])];
+        console.log("Leçons à mettre à jour :", updatedLessons);
+        const updateResponse = await updateUserInfo(userId, {
+          lessons: updatedLessons,
+        });
+
+        this.$store.commit("SET_USER", updateResponse.data); 
+
+        localStorage.setItem("user", JSON.stringify(updateResponse.data));
         await payOrder(orderId);
+        await updateUserInfo(userId, { lessons: updatedLessons });
         this.$store.dispatch("cart/clearCart");
         alert("Paiement réussi !");
-        this.$router.push({ name: "Home" });
+        this.$router.push({ name: "Dashboard" });
       } catch (error) {
         console.error("Erreur lors du paiement :", error);
       }
@@ -83,7 +100,10 @@ export default {
               price: details.price,
             };
           } catch (error) {
-            console.error(`Erreur lors de la récupération des détails pour ${item.type} :`, error);
+            console.error(
+              `Erreur lors de la récupération des détails pour ${item.type} :`,
+              error
+            );
             return {
               ...item,
               title: "Nom non disponible",
