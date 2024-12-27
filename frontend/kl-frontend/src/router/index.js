@@ -10,6 +10,7 @@ import Themes from '@/views/Themes.vue';
 import Login from '@/views/Login.vue';
 import Cart from '@/views/Cart.vue';
 import OrderRecap from '@/views/Payment.vue'
+import LessonDetails from '@/views/LessonDetails.vue'
 
 const routes = [
   {
@@ -42,6 +43,12 @@ const routes = [
     path: "/payment/:orderId",
     name: "orderRecap",
     component: OrderRecap,
+  },
+  {
+    path: "/lesson/:id",
+    name: "LessonDetails",
+    component: LessonDetails,
+    props: true,
   },
   {
     path: '/:catchAll(.*)', // Route pour toutes les autres pages non trouvées
