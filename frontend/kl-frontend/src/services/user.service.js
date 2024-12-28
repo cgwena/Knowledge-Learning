@@ -22,8 +22,13 @@ export const getUserInfo = async () => {
 
 // Fonction pour s'inscrire
 export const registerUser = async (userData) => {
-  const response = await axiosInstance.post("/auth/register", userData);
+  const response = await axios.post("http://localhost:3000/user/register", userData);
   return response; // Retourne la réponse de l'inscription
+};
+
+export const confirmRegistration = async (token) => {
+  const response = await axios.get(`http://localhost:3000/user/confirm/${token}`);
+  return response.data;
 };
 
 // Fonction pour se connecter

@@ -1,38 +1,49 @@
 // src/router.js
 
-import { createRouter, createWebHistory } from 'vue-router'; // Importation des fonctions nécessaires
+import { createRouter, createWebHistory } from 'vue-router';
 import store from '../store'; 
 import Home from '@/views/Home.vue'; 
 import DashBoard from '@/views/DashBoard.vue';
-//import Login from './views/Login.vue';
 import NotFound from '@/views/NotFound.vue'; 
 import Themes from '@/views/Themes.vue';
 import Login from '@/views/Login.vue';
 import Cart from '@/views/Cart.vue';
 import OrderRecap from '@/views/Payment.vue'
 import LessonDetails from '@/views/LessonDetails.vue'
+import Register from '@/views/RegisterUser.vue'
+import Confirm from '@/views/ConfirmUser.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home, // Composant associé à la route d'accueil
+    component: Home, 
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
+  },
+  {
+    path: "/confirm/",
+    name: "Confirm",
+    component: Confirm,
   },
   {
     path: '/themes',
     name: 'ThemesPage',
-    component: Themes, // Lien vers la page des thèmes
+    component: Themes,
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: DashBoard, // Composant associé à la route du tableau de bord
-    //meta: { requiresAuth: true }, // Exemple de route protégée
+    component: DashBoard, 
+    meta: { requiresAuth: true }, 
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login, // Composant associé à la route de connexion
+    component: Login,
   },
   {
     path: "/cart",
@@ -51,24 +62,29 @@ const routes = [
     props: true,
   },
   {
-    path: '/:catchAll(.*)', // Route pour toutes les autres pages non trouvées
+    path: '/:catchAll(.*)',
     name: 'NotFound',
     component: NotFound,
   }
 ];
 
 const router = createRouter({
-  history: createWebHistory(), // Utilisation de l'historique du navigateur pour la gestion des URL
-  routes, // Les routes définies plus haut
+  history: createWebHistory(), 
+  routes,
 });
 
-// Ajout d'un garde de navigation pour gérer les routes protégées
 router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth && !store.getters['auth.isAuthenticated']) {
-      next({ name: 'Login' }); // Rediriger vers la page de login si l'utilisateur n'est pas authentifié
+  if (to.meta.requiresAuth) {
+    const user = store.state.user;
+
+    if (user && user.isActive) {
+      next(); 
     } else {
-      next(); // Permet de continuer la navigation
+      next({ name: "Login" }); 
     }
-  });
+  } else {
+    next();
+  }
+});
 
 export default router;

@@ -12,4 +12,7 @@ router.patch('/update/:id', private.checkJWT, service.update)
 router.delete('/delete/:id', private.checkJWT, service.delete)
 router.post('/authenticate', service.authenticate)
 
+router.post("/register", service.registerUser);
+router.get("/confirm/:token", service.confirmRegistration);
+
 module.exports = router;

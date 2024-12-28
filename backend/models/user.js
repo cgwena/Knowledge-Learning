@@ -25,7 +25,11 @@ const User = new Schema({
     }, 
     lessons: {
         type: Array
-    }
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
 }, {
     timestamps: true
 })
