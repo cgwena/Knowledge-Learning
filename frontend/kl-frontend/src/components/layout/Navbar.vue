@@ -2,6 +2,9 @@
   <nav>
     <a href="/"><img src="../../assets/Logo_KL.png" alt="Knowledge logo" /></a>
     <ul>
+      <li v-if="isAuthenticated && isAdmin">
+        <a href="/admin">Gestion du site</a>
+      </li>
       
       <li><a href="/themes">Nos cours</a></li>
       <li v-if="isAuthenticated">
@@ -27,7 +30,7 @@ export default {
   
   name: "NavBar",
   computed: {
-    ...mapGetters("auth", ["isAuthenticated"]), // Vérifie si l'utilisateur est authentifié
+    ...mapGetters("auth", ["isAuthenticated", "getUser", "isAdmin"]),
   },
   methods: {
     logout() {

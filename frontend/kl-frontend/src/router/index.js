@@ -12,6 +12,7 @@ import OrderRecap from '@/views/Payment.vue'
 import LessonDetails from '@/views/LessonDetails.vue'
 import Register from '@/views/RegisterUser.vue'
 import Confirm from '@/views/ConfirmUser.vue'
+import AdminDashboard from '@/views/AdminDashboard.vue';
 
 const routes = [
   {
@@ -65,6 +66,18 @@ const routes = [
     path: '/:catchAll(.*)',
     name: 'NotFound',
     component: NotFound,
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: AdminDashboard,
+    // beforeEnter: (to, from, next) => {
+    //   if (store.getters.isAdmin) {
+    //     next(); 
+    //   } else {
+    //     next({ name: 'Home' }); 
+    //   }
+    // },
   }
 ];
 

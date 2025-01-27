@@ -55,23 +55,30 @@ exports.getById = async (req, res) => {
   }
 };
 
-// Mettre à jour un thème
+// Mettre à jour un thème et ajouter des cursus
 exports.update = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { title, cursus } = req.body; // On récupère aussi les cursus envoyés
 
   try {
+    // Si des cursus sont envoyés, on ajoute ces cursus à la liste existante du thème
+    const updateData = {};
+    if (title) updateData.title = title;  // Mettre à jour le titre du thème
+    if (cursus && cursus.length > 0) {
+      updateData.$addToSet = { cursus: { $each: cursus } };  // Ajouter les cursus sans doublon
+    }
+
     const updatedTheme = await Theme.findByIdAndUpdate(
       id,
-      { title },
-      { new: true } // Retourne le document mis à jour
+      updateData,
+      { new: true } // Retourner le document mis à jour
     );
 
     if (!updatedTheme) {
       return res.status(404).json({ error: "Thème introuvable." });
     }
 
-    return res.status(200).json(updatedTheme);
+    return res.status(200).json(updatedTheme);  // Renvoie le thème mis à jour
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
