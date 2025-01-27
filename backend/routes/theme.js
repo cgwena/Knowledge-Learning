@@ -6,9 +6,9 @@ const private = require('../middlewares/private')
 
 router.get('/', service.getAll);
 router.get('/:id', private.checkJWT, service.getById);
-router.post('/add', service.add)
-router.put('/:id', private.checkJWT, service.update)
-router.delete('/:id', private.checkJWT, service.delete)
-router.post('/add-cursus', service.addCursusToTheme);
+router.post('/add', private.checkJWT, private.checkAdmin, service.add)
+router.put('/:id', private.checkJWT, private.checkAdmin, service.update)
+router.delete('/:id', private.checkJWT, private.checkAdmin, service.delete)
+router.post('/add-cursus', private.checkAdmin, service.addCursusToTheme);
 
 module.exports = router;

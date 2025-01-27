@@ -114,7 +114,7 @@ exports.authenticate = async (req, res, next) => {
 
     // Suppression du mot de passe de l'objet utilisateur
     const { _id, email: userEmail, role } = user; // Sélectionner les champs nécessaires
-    const payload = { id: _id, email: userEmail, role };
+    const payload = { id: _id, email: userEmail, role: role };
 
     // Création du token JWT
     const expireIn = 24 * 60 * 60; // 24 heures
@@ -164,6 +164,7 @@ exports.add = async (req, res, next) => {
     firstname: req.body.firstname,
     email: req.body.email,
     password: req.body.password,
+    role: req.body.role
   };
 
   try {
