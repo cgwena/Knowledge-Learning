@@ -8,7 +8,6 @@ const state = {
 const getters = {
   isAuthenticated: (state) => !!state.token, // Vérifie si l'utilisateur est authentifié
   isAdmin: (state) => {
-    console.log('user dans isAdmin (store)', state)
     return state.user?.role === "admin";
   },
   getUser: (state) => state.user, // Récupère l'utilisateur
@@ -18,12 +17,10 @@ const getters = {
 const mutations = {
   SET_TOKEN(state, token) {
     state.token = token;
-    console.log('token dans le store', token)
   },
   SET_USER(state, user) {
     state.user = user;
     localStorage.setItem("user", JSON.stringify(user)); // Stockage direct en mutation
-    console.log("Utilisateur mis à jour dans le store :", state.user);
   },
   
   LOGOUT(state) {
@@ -31,7 +28,6 @@ const mutations = {
     state.user = null;
   },
   SET_USER_LESSONS(state, lessons) {
-    console.log("state.user", state.user);
     if (state.user) {
       state.user.lessons = lessons;
     }
@@ -45,20 +41,13 @@ const actions = {
         "http://localhost:3000/user/authenticate",
         { email, password }
       );
-      console.log(response);
       if (response && response.data) {
         const token = response.data.token;
         const user = response.data.user;
-        console.log("user", user);
 
         if (token) {
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(user));
-          console.log("Token enregistré :", localStorage.getItem("token"));
-          console.log(
-            "Utilisateur enregistré :",
-            JSON.parse(localStorage.getItem("user"))
-          );
 
           commit("SET_TOKEN", token);
           commit("SET_USER", user);
@@ -132,8 +121,6 @@ const actions = {
           },
         }
       );
-
-      console.log("response", response);
       // Vérification de la réponse
       if (response.data && response.data.lessons) {
         const lessons = response.data.lessons;

@@ -13,6 +13,7 @@ import LessonDetails from '@/views/LessonDetails.vue'
 import Register from '@/views/RegisterUser.vue'
 import Confirm from '@/views/ConfirmUser.vue'
 import AdminDashboard from '@/views/AdminDashboard.vue';
+import Certifications from '@/views/UserCertifications.vue';
 
 const routes = [
   {
@@ -39,7 +40,13 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: DashBoard, 
-    meta: { requiresAuth: true }, 
+    //meta: { requiresAuth: true }, 
+  },
+  {
+    path: '/certifications',
+    name: 'Certifications',
+    component: Certifications, 
+    //meta: { requiresAuth: true }, 
   },
   {
     path: '/login',

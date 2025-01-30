@@ -183,7 +183,7 @@ exports.update = async (req, res, next) => {
   if (req.body.email) temp.email = req.body.email;
   if (req.body.password) temp.password = req.body.password;
   if (req.body.lessons) temp.lessons = req.body.lessons;
-
+  if (req.body.cursus) temp.cursus = req.body.cursus
   try {
     let user = await User.findOne({ _id: id });
 
@@ -202,6 +202,37 @@ exports.update = async (req, res, next) => {
     return res.status(501).json(error);
   }
 };
+
+exports.markLessonAsCompleted = async (req, res) => {
+  console.log("✅ Requête reçue :", req.method, req.url);
+  console.log("Params reçus :", req.params); // Vérifie si lessonId est présent
+  console.log("Utilisateur ID :", req.decoded ? req.decoded.id : "Non authentifié");
+
+  try {
+    const userId = req.decoded.id;
+    const { lessonId } = req.params; // 🔹 Bien récupérer lessonId depuis params
+
+    console.log("🔹 userId :", userId);
+    console.log("🔹 lessonId :", lessonId);
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    const cursusUpdated = user.completeLesson(lessonId);
+    await user.save();
+
+    return res.json({
+      message: "Leçon complétée avec succès",
+      cursusUpdated,
+    });
+  } catch (err) {
+    console.error("❌ Erreur serveur :", err);
+    return res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
+
 
 exports.delete = async (req, res, next) => {
   const id = req.params.id;

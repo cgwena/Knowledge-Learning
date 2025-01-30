@@ -83,6 +83,91 @@ export const updateUserInfo = async (userId, userData) => {
   return response;
 };
 
+export async function updateUserLessonsAndCursus(userId, items) {
+  const token = localStorage.getItem("token");
+  console.log('items dans service', items)
+  try {
+    // Récupérer les leçons et cursus séparément
+    const newLessons = items
+      .filter((item) => item.type === "lesson")
+      .map((item) => ({
+        id: item.id,
+        data: item.data, // Remplacez par le vrai titre si disponible
+        isCompleted: false, // Définir un état par défaut ou selon votre logique
+      }));
+
+    const newCursus = items
+      .filter((item) => item.type === "cursus")
+      .map((item) => ({
+        id: item.id,
+        data: item.data, // Remplacez par le vrai titre si disponible
+        isCompleted: false, // Définir un état par défaut ou selon votre logique
+        lessons: item.data.lessons, // Ajoutez les leçons associées si nécessaire
+      }));
+
+    const userResponse = await axios.get(`http://localhost:3000/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const existingLessons = userResponse.data.lessons || [];
+    const existingCursus = userResponse.data.cursus || [];
+    console.log('existingLessons', existingLessons)
+    console.log('existingCursus', existingCursus)
+
+    // Fusionner les anciennes et nouvelles données
+    const updatedLessons = [...existingLessons, ...newLessons];
+    const updatedCursus = [...existingCursus, ...newCursus];
+    console.log('updatedLessons', updatedLessons)
+    console.log('updatedCursus', updatedCursus)
+    // Suppression des doublons (par exemple, basés sur le titre)
+    // const uniqueLessons = Array.from(
+    //   new Map(updatedLessons.map((lesson) => [lesson.title, lesson])).values()
+    // );
+    // const uniqueCursus = Array.from(
+    //   new Map(updatedCursus.map((cursus) => [cursus.title, cursus])).values()
+    // );
+
+    // Requête API pour mettre à jour l'utilisateur
+    const response = await axios.patch(
+      `http://localhost:3000/users/update/${userId}`,
+      {
+        lessons: updatedLessons,
+        cursus: updatedCursus,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data; // Retourne l'utilisateur mis à jour
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour des données utilisateur :", error);
+    throw error;
+  }
+}
+
+export async function markLessonAsCompleted(lessonId) {
+  const token = localStorage.getItem("token");
+  console.log('token dans service markLesson', token)
+  console.log(lessonId)
+  try {
+    const response = await axios.patch(`http://localhost:3000/users/lessons/${lessonId}/complete`
+      ,{},
+      {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de la leçon :", error);
+    throw error;
+  }
+}
+
 // Fonction pour supprimer un compte utilisateur
 export const deleteUser = async (userId) => {
   const token = localStorage.getItem("token");

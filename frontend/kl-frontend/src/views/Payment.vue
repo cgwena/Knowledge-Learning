@@ -26,12 +26,11 @@
     </main>
   </div>
 </template>
-
 <script>
 import ActionButton from "@/components/ActionButton.vue";
 import { getOrderById, payOrder } from "@/services/order.service";
 import { fetchCursusById, fetchLessonById } from "@/services/lesson.service";
-import { updateUserInfo } from "@/services/user.service";
+import { updateUserLessonsAndCursus } from "@/services/user.service";
 
 export default {
   name: "OrderRecap",
@@ -41,7 +40,6 @@ export default {
   data() {
     return {
       order: null,
-      orderId: null,
     };
   },
   async created() {
@@ -56,32 +54,55 @@ export default {
     }
   },
   methods: {
-    async handlePayOrder(orderId) {
-      const user = JSON.parse(localStorage.getItem("user"));
-      console.log("user", user);
-      const currentLessons = user.lessons || [];
-      console.log("currentLessons", currentLessons);
-      const userId = user._id;
-      const lessonsIds = this.order.items.map((item) => item.itemId);
-      try {
-        const updatedLessons = [...new Set([...currentLessons, ...lessonsIds])];
-        console.log("Leçons à mettre à jour :", updatedLessons);
-        const updateResponse = await updateUserInfo(userId, {
-          lessons: updatedLessons,
-        });
+    async handlePayOrder() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user._id;
+  console.log("order.items", this.order.items);
 
-        this.$store.commit("SET_USER", updateResponse.data); 
+  try {
+    // Récupérer les objets complets pour chaque item
+    const itemData = await Promise.all(
+      this.order.items.map(async (item) => {
+        let data;
+        
+        // Utiliser la bonne fonction en fonction du type
+        if (item.type === "cursus") {
+          const response = await fetchCursusById(item.itemId);
+          console.log('response pour cursus', response)
+          data = response;
+        } else if (item.type === "lesson") {
+          const response = await fetchLessonById(item.itemId);
+          data = response;
+        }
 
-        localStorage.setItem("user", JSON.stringify(updateResponse.data));
-        await payOrder(orderId);
-        await updateUserInfo(userId, { lessons: updatedLessons });
-        this.$store.dispatch("cart/clearCart");
-        alert("Paiement réussi !");
-        this.$router.push({ name: "Dashboard" });
-      } catch (error) {
-        console.error("Erreur lors du paiement :", error);
-      }
-    },
+        return {
+          id: item.itemId, // ID de l'objet
+          type: item.type, // Type (cursus ou lesson)
+          data, // Objet complet récupéré depuis l'API
+          isCompleted: false, // Initialisation à false
+        };
+      })
+    );
+
+    // Mettre à jour les leçons et cursus de l'utilisateur
+    const updatedUser = await updateUserLessonsAndCursus(userId, itemData);
+
+    // Mettre à jour le store et le localStorage
+    this.$store.commit("SET_USER", updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+
+    // Finaliser le paiement
+    await payOrder(this.order._id);
+
+    // Rediriger l'utilisateur
+    this.$store.dispatch("cart/clearCart");
+    alert("Paiement réussi !");
+    this.$router.push({ name: "Dashboard" });
+  } catch (error) {
+    console.error("Erreur lors du paiement :", error);
+    alert("Une erreur est survenue lors du paiement.");
+  }
+},
     async enrichOrderItems() {
       const enrichedItems = await Promise.all(
         this.order.items.map(async (item) => {
@@ -96,8 +117,10 @@ export default {
             }
             return {
               ...item,
+              _id: details._id,
               title: details.title,
               price: details.price,
+              lessons : details.lessons
             };
           } catch (error) {
             console.error(
@@ -112,13 +135,13 @@ export default {
           }
         })
       );
-
       // Met à jour les items enrichis dans la commande
       this.order.items = enrichedItems;
     },
   },
 };
 </script>
+
 
 <style scoped>
 .order-recap {
