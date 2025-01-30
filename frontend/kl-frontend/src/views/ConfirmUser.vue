@@ -1,4 +1,5 @@
 <template>
+  <Navbar />
   <div>
     <h1>Confirmation de l'inscription</h1>
     <p v-if="message">{{ message }}</p>
@@ -7,12 +8,16 @@
 
 <script>
 import { confirmRegistration } from "@/services/user.service";
+import Navbar from "@/components/layout/Navbar.vue";
 
 export default {
   data() {
     return {
       message: "",
     };
+  },
+  components: {
+    Navbar,
   },
   async created() {
     // Récupère le token depuis la query string

@@ -14,15 +14,16 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email déjà enregistré." });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = new User({
       name,
       email,
-      password: hashedPassword,
+      password,
       isActive: false,
     });
     await newUser.save();
+
+    const savedUser = await User.findOne({ email });
+ 
 
     // Générer un token de confirmation
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
@@ -38,13 +39,17 @@ exports.registerUser = async (req, res) => {
 
     // Lien de confirmation avec query string
     const confirmationUrl = `${process.env.FRONTEND_URL}/confirm?token=${token}`;
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Confirmation de votre inscription",
-      html: `<p>Merci de vous être inscrit. Cliquez sur le lien suivant pour confirmer votre compte :</p>
+    await transporter
+      .sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Confirmation de votre inscription",
+        html: `<p>Merci de vous être inscrit. Cliquez sur le lien suivant pour confirmer votre compte :</p>
              <a href="${confirmationUrl}">Confirmer mon compte</a>`,
-    });
+      })
+      .catch((err) => {
+        console.error("❌ Erreur d'envoi d'email:", err);
+      });
 
     res.status(201).json({
       message:
@@ -105,9 +110,13 @@ exports.authenticate = async (req, res, next) => {
       console.log("User not found");
       return res.status(404).json({ error: "User not found" });
     }
-
+    console.log("Mot de passe reçu en entrée:", password);
+    console.log("Mot de passe en base de données:", user.password);
     // Vérification du mot de passe
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log("Password entered:", password);
+    console.log("Password stored:", user.password);
+    console.log("Is password valid?", isPasswordValid);
     if (!isPasswordValid) {
       return res.status(403).json({ error: "Invalid credentials" });
     }
@@ -164,7 +173,7 @@ exports.add = async (req, res, next) => {
     firstname: req.body.firstname,
     email: req.body.email,
     password: req.body.password,
-    role: req.body.role
+    role: req.body.role,
   };
 
   try {
@@ -183,7 +192,7 @@ exports.update = async (req, res, next) => {
   if (req.body.email) temp.email = req.body.email;
   if (req.body.password) temp.password = req.body.password;
   if (req.body.lessons) temp.lessons = req.body.lessons;
-  if (req.body.cursus) temp.cursus = req.body.cursus
+  if (req.body.cursus) temp.cursus = req.body.cursus;
   try {
     let user = await User.findOne({ _id: id });
 
@@ -206,7 +215,10 @@ exports.update = async (req, res, next) => {
 exports.markLessonAsCompleted = async (req, res) => {
   console.log("✅ Requête reçue :", req.method, req.url);
   console.log("Params reçus :", req.params); // Vérifie si lessonId est présent
-  console.log("Utilisateur ID :", req.decoded ? req.decoded.id : "Non authentifié");
+  console.log(
+    "Utilisateur ID :",
+    req.decoded ? req.decoded.id : "Non authentifié"
+  );
 
   try {
     const userId = req.decoded.id;
@@ -229,10 +241,11 @@ exports.markLessonAsCompleted = async (req, res) => {
     });
   } catch (err) {
     console.error("❌ Erreur serveur :", err);
-    return res.status(500).json({ message: "Erreur serveur", error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Erreur serveur", error: err.message });
   }
 };
-
 
 exports.delete = async (req, res, next) => {
   const id = req.params.id;
