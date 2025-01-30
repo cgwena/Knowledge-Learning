@@ -28,6 +28,7 @@ exports.checkJWT = (req, res, next) => {
       // Log de débogage : vérifiez ce que contient le "decoded"
       if (decoded) {
         req.decoded = decoded;
+        console.log(decoded)
     
         const expireIn = 24 * 60 * 60; // 24 heures
         const newToken = jwt.sign({ user: decoded.user }, SECRET_KEY, {

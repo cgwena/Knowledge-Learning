@@ -1,7 +1,7 @@
 <template>
-  <div class="cursus-card">
+  <div class="cursus-card"> 
+    
     <h3>{{ cursus.title }} ({{ cursus.price }} €)</h3>
-
     <!-- Liste des leçons associées -->
     <LessonList
       :lessons="cursus.lessons"
