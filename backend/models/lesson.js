@@ -1,11 +1,12 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import mongoose from 'mongoose';
 
-const Lesson = new Schema({
-    title: {type : String, required: true},
-    text: { type: String, required: true},
-    video_url: { type : String},
-    price: { type : Number, required: true},
-})
+const { Schema } = mongoose;
 
-module.exports = mongoose.model('Lesson', Lesson)
+const LessonSchema = new Schema({
+  title: { type: String, required: true },
+  text: { type: String, required: true },
+  video_url: { type: String },
+  price: { type: Number, required: true }
+});
+
+export default mongoose.model('Lesson', LessonSchema);

@@ -1,15 +1,12 @@
-const Theme = require('../models/theme');
-const Cursus = require('../models/cursus');
+import Theme from '../models/theme.js';
+import Cursus from '../models/cursus.js';
 
 // Ajouter un nouveau thème
-exports.add = async (req, res, next) => {
+const add = async (req, res) => {
   const { title, cursus } = req.body;
 
   try {
-    let theme = await Theme.create({
-      title,
-      cursus, 
-    });
+    const theme = await Theme.create({ title, cursus });
     return res.status(201).json(theme);
   } catch (error) {
     return res.status(501).json(error);
@@ -17,7 +14,7 @@ exports.add = async (req, res, next) => {
 };
 
 // Obtenir tous les thèmes avec leurs cursus et leçons
-exports.getAll = async (req, res) => {
+const getAll = async (req, res) => {
   try {
     const themeList = await Theme.find()
       .populate({
@@ -34,7 +31,7 @@ exports.getAll = async (req, res) => {
 };
 
 // Obtenir un thème par ID avec ses cursus et leçons
-exports.getById = async (req, res) => {
+const getById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -56,36 +53,35 @@ exports.getById = async (req, res) => {
 };
 
 // Mettre à jour un thème et ajouter des cursus
-exports.update = async (req, res) => {
+const update = async (req, res) => {
   const { id } = req.params;
-  const { title, cursus } = req.body; // On récupère aussi les cursus envoyés
+  const { title, cursus } = req.body;
 
   try {
-    // Si des cursus sont envoyés, on ajoute ces cursus à la liste existante du thème
     const updateData = {};
-    if (title) updateData.title = title;  // Mettre à jour le titre du thème
+    if (title) updateData.title = title;
     if (cursus && cursus.length > 0) {
-      updateData.$addToSet = { cursus: { $each: cursus } };  // Ajouter les cursus sans doublon
+      updateData.$addToSet = { cursus: { $each: cursus } };
     }
 
     const updatedTheme = await Theme.findByIdAndUpdate(
       id,
       updateData,
-      { new: true } // Retourner le document mis à jour
+      { new: true }
     );
 
     if (!updatedTheme) {
       return res.status(404).json({ error: "Thème introuvable." });
     }
 
-    return res.status(200).json(updatedTheme);  // Renvoie le thème mis à jour
+    return res.status(200).json(updatedTheme);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 };
 
 // Supprimer un thème
-exports.delete = async (req, res) => {
+const deleteTheme = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -102,31 +98,37 @@ exports.delete = async (req, res) => {
 };
 
 // Ajouter un cursus à un thème
-exports.addCursusToTheme = async (req, res) => {
+const addCursusToTheme = async (req, res) => {
   const { themeId, cursusId } = req.body;
 
   try {
-    // Vérifier si le thème existe
     const theme = await Theme.findById(themeId);
     if (!theme) {
       return res.status(404).json({ error: "Thème introuvable." });
     }
 
-    // Vérifier si le cursus existe
     const cursus = await Cursus.findById(cursusId);
     if (!cursus) {
       return res.status(404).json({ error: "Cursus introuvable." });
     }
 
-    // Ajouter le cursus au tableau `cursus` du thème
     const updatedTheme = await Theme.findByIdAndUpdate(
       themeId,
-      { $addToSet: { cursus: cursusId } }, // Utilise $addToSet pour éviter les doublons
-      { new: true } // Retourne le document mis à jour
+      { $addToSet: { cursus: cursusId } },
+      { new: true }
     ).populate('cursus');
 
     return res.status(200).json(updatedTheme);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
+};
+
+export default {
+  add,
+  getAll,
+  getById,
+  update,
+  delete: deleteTheme, // Avoid using 'delete' as a reserved word
+  addCursusToTheme,
 };

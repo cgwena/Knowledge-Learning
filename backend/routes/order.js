@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const orderService = require('../services/order');
-const private = require('../middlewares/private')
 
+import orderService from '../services/order.js';
+import middleware from '../middlewares/private.js';
 
-router.post('/', private.checkJWT, orderService.createOrder);
+router.post('/', middleware.checkJWT, orderService.createOrder);
 router.get('/user/:userId', orderService.getOrdersByUser);
-router.get('/:orderId', orderService.getOrderById)
+router.get('/:orderId', orderService.getOrderById);
 router.put('/:orderId', orderService.updateOrderStatus);
 
-module.exports = router;
+export default router;

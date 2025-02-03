@@ -64,7 +64,6 @@ export default {
   methods: {
     ...mapActions("cart", ["removeFromCart"]),
     async checkout() {
-      console.log("cartItems", this.cartItems);
       const items = this.cartItems.map((item) => {
         const type = item.lessons ? "cursus" : "lesson"; // Si l'objet a des leçons, c'est un cursus
         return {

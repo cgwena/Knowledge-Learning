@@ -1,15 +1,23 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const cors = require('cors')
+import createError from 'http-errors';
+import express from 'express';
+import path from 'path';
+import url from 'url';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import cors from 'cors';
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// Détermine le répertoire courant avec import.meta.url
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const mongodb = require('./db/mongo')
-mongodb.clientDbInitCommection()
+import indexRouter from './routes/index.js';
+import usersRouter from './routes/users.js';
+
+// Corrigez l'importation ici
+import clientDbInitConnection from './db/mongo.js';  // Import de la fonction directement
+
+// Initialisation de la connexion à la DB
+clientDbInitConnection();
 
 var app = express();
 
@@ -45,4 +53,4 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
 });
 
-module.exports = app;
+export default app;

@@ -87,7 +87,6 @@ export default {
       this.$emit("deleteCursus", cursusId);
     },
     editLesson(lesson) {
-      console.log("editLesson dans cursusCard", lesson)
       this.$emit("editLesson", lesson);
     },
     deleteLesson(lessonId) {
@@ -106,7 +105,6 @@ export default {
         alert("Veuillez renseigner un titre, un prix et un textevalide pour la leçon.");
         return;
       }
-      console.log('submitNewLesson dans CursusCard')
 
       const newLessonData = {
         ...this.newLesson,
@@ -115,7 +113,6 @@ export default {
 
       // Émettre un événement pour le parent avec les données du nouveau cursus
       this.$emit('addNewLesson', newLessonData);
-      console.log('newLesson dans CursusCard', newLessonData)
 
       // Réinitialiser le formulaire
       this.isAddingLesson = false;

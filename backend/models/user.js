@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const bcrypt = require("bcrypt");
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+
+
+const { Schema } = mongoose;
 
 const UserSchema = new Schema(
   {
@@ -99,4 +101,4 @@ UserSchema.methods.completeLesson = function (lessonId) {
   return cursusUpdated;
 };
 
-module.exports = mongoose.model("User", UserSchema);
+export default mongoose.model("User", UserSchema);

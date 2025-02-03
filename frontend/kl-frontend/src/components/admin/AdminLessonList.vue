@@ -43,7 +43,6 @@ export default {
     },
     saveLesson(lessonId) {
       // Sauvegarder les modifications
-      console.log("editLesson dans lessonList", lessonId)
       this.$emit("editLesson", { ...this.editedLesson, id: lessonId });
       this.editingLessonId = null; // Réinitialiser l'état d'édition
     },

@@ -1,9 +1,10 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-const Theme = new Schema({
+const { Schema } = mongoose;
+
+const ThemeSchema = new Schema({
   title: { type: String, required: true },
   cursus: [{ type: Schema.Types.ObjectId, ref: 'Cursus' }],
 });
 
-module.exports = mongoose.model("Theme", Theme);
+export default mongoose.model('Theme', ThemeSchema);

@@ -11,7 +11,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Vérifiez le token dans le store
-    console.log(store.getters['auth/authToken']); // Vérifiez ici si le token est bien présent dans le store
     const token = store.getters['auth/authToken'];
     
     if (token) {
