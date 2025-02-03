@@ -57,7 +57,6 @@ export default {
     async handlePayOrder() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user._id;
-  console.log("order.items", this.order.items);
 
   try {
     // Récupérer les objets complets pour chaque item
@@ -68,7 +67,6 @@ export default {
         // Utiliser la bonne fonction en fonction du type
         if (item.type === "cursus") {
           const response = await fetchCursusById(item.itemId);
-          console.log('response pour cursus', response)
           data = response;
         } else if (item.type === "lesson") {
           const response = await fetchLessonById(item.itemId);

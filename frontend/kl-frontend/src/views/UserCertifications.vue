@@ -40,9 +40,7 @@
     async created() {
       if (this.isAuthenticated) {
           const response = await getUserInfo(); // Appel pour récupérer les données utilisateur
-          console.log('cursus user', response.data.cursus)
           this.userCertifiedCursus = response.data.cursus.filter((cursus) => cursus.isCompleted === true)
-          console.log('certified cursus', this.userCertifiedCursus)
       }
           
   

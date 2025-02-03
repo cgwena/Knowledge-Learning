@@ -51,7 +51,6 @@ export const loginUser = async (email, password) => {
 
 export const addUser = async (userData) => {
   const token = localStorage.getItem("token");
-  console.log('token', token)
   try {
     const response = await axios.post("http://localhost:3000/users/add", userData, {
       headers: {
@@ -67,9 +66,6 @@ export const addUser = async (userData) => {
 
 // Fonction pour mettre à jour les informations utilisateur
 export const updateUserInfo = async (userId, userData) => {
-  console.log("update appelée");
-  console.log("userId", userId);
-  console.log("userData", userData);
   const token = localStorage.getItem("token");
   const response = await axios.patch(
     `http://localhost:3000/users/update/${userId}`,
@@ -85,7 +81,6 @@ export const updateUserInfo = async (userId, userData) => {
 
 export async function updateUserLessonsAndCursus(userId, items) {
   const token = localStorage.getItem("token");
-  console.log('items dans service', items)
   try {
     // Récupérer les leçons et cursus séparément
     const newLessons = items
@@ -113,14 +108,10 @@ export async function updateUserLessonsAndCursus(userId, items) {
 
     const existingLessons = userResponse.data.lessons || [];
     const existingCursus = userResponse.data.cursus || [];
-    console.log('existingLessons', existingLessons)
-    console.log('existingCursus', existingCursus)
 
     // Fusionner les anciennes et nouvelles données
     const updatedLessons = [...existingLessons, ...newLessons];
     const updatedCursus = [...existingCursus, ...newCursus];
-    console.log('updatedLessons', updatedLessons)
-    console.log('updatedCursus', updatedCursus)
     // Suppression des doublons (par exemple, basés sur le titre)
     // const uniqueLessons = Array.from(
     //   new Map(updatedLessons.map((lesson) => [lesson.title, lesson])).values()
@@ -151,7 +142,6 @@ export async function updateUserLessonsAndCursus(userId, items) {
 
 export async function markLessonAsCompleted(lessonId) {
   const token = localStorage.getItem("token");
-  console.log('token dans service markLesson', token)
   console.log(lessonId)
   try {
     const response = await axios.patch(`http://localhost:3000/users/lessons/${lessonId}/complete`

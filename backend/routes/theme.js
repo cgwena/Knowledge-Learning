@@ -1,14 +1,14 @@
-var express = require('express');
-var router = express.Router();
+import express from 'express';
+const router = express.Router();
 
-const service = require('../services/theme')
-const private = require('../middlewares/private')
+import service from '../services/theme.js';
+import middleware from '../middlewares/private.js';
 
 router.get('/', service.getAll);
-router.get('/:id', private.checkJWT, service.getById);
-router.post('/add', private.checkJWT, private.checkAdmin, service.add)
-router.put('/:id', private.checkJWT, private.checkAdmin, service.update)
-router.delete('/:id', private.checkJWT, private.checkAdmin, service.delete)
-router.post('/add-cursus', private.checkAdmin, service.addCursusToTheme);
+router.get('/:id', middleware.checkJWT, service.getById);
+router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
+router.put('/:id', middleware.checkJWT, middleware.checkAdmin, service.update);
+router.delete('/:id', middleware.checkJWT, middleware.checkAdmin, service.delete);
+router.post('/add-cursus', middleware.checkAdmin, service.addCursusToTheme);
 
-module.exports = router;
+export default router;

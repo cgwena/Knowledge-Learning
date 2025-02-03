@@ -202,7 +202,6 @@ export default {
     },
     async handleUserSubmit() {
       const cleanUserForm = { ...this.userForm }; // Déstructure les données
-      console.log("Données envoyées (après nettoyage) :", cleanUserForm);
 
       try {
         if (this.isEditingUser) {
@@ -231,7 +230,6 @@ export default {
       };
     },
     async deleteUser(userId) {
-      console.log(userId);
       await deleteUser(userId);
       this.fetchUsers();
     },
@@ -240,7 +238,6 @@ export default {
     async fetchThemes() {
       try {
         const response = await getThemes();
-        console.log("themes dans le composant", response);
         this.themes = response;
       } catch (error) {
         console.error("Erreur lors de la récupération des thèmes", error);
@@ -279,9 +276,7 @@ export default {
           const lessonsToAddToCursus = [];
           for (const lesson of cursus.lessons) {
             try {
-              console.log("lesson", lesson);
               const response = await addLesson(lesson);
-              console.log("response.data", response);
               lessonsToAddToCursus.push(response._id);
             } catch (error) {
               console.error(
@@ -291,7 +286,6 @@ export default {
               throw new Error("Échec de l'enregistrement d'une leçon.");
             }
           }
-          console.log("LessonsToAddToCursus", lessonsToAddToCursus);
           try {
             const savedCursus = await addCursus({
               title: cursus.title,
@@ -329,8 +323,6 @@ export default {
 
         // Rafraîchir la liste des thèmes
         await this.fetchThemes();
-
-        console.log("Thème ajouté avec succès !");
       } catch (error) {
         console.error("Erreur globale :", error);
       }
@@ -412,10 +404,8 @@ export default {
       this.fetchThemes();
     },
     async editLesson(lesson) {
-      console.log("editLesson");
       this.isEditingLesson = true;
       this.currentLesson = lesson;
-      console.log("this.currentLesson", lesson);
       this.lessonForm = { title: lesson.title };
       await updateLesson(this.currentLesson._id, this.lessonForm);
       this.fetchThemes();
@@ -425,7 +415,6 @@ export default {
       this.fetchThemes();
     },
     async addNewCursus(newCursus) {
-      console.log("newCursus", newCursus);
       const themeId = newCursus.themeId;
       const cursusToAddToTheme = [];
 
@@ -434,7 +423,6 @@ export default {
           title: newCursus.title,
           price: newCursus.price, // Récupérer les IDs des cursus
         });
-        console.log("response", response);
         cursusToAddToTheme.push(response._id);
         const theme = await fetchThemeById(themeId); // Assurez-vous que vous avez une fonction pour obtenir le thème
 
@@ -455,7 +443,6 @@ export default {
       }
     },
     async addNewLesson(newLesson) {
-      console.log("newLesson", newLesson);
       const cursusId = newLesson.cursusId;
       const lessonToAddToCursus = [];
 
@@ -465,7 +452,6 @@ export default {
           price: newLesson.price, // Récupérer les IDs des cursus
           text: newLesson.text
         });
-        console.log("response", response);
         lessonToAddToCursus.push(response._id);
         const cursus = await fetchCursusById(cursusId); // Assurez-vous que vous avez une fonction pour obtenir le thème
 

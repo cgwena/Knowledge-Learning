@@ -30,7 +30,6 @@ export default {
   },
   methods: {
     handleAddToCart(lesson) {
-      console.log("Ajout au panier depuis LessonList:", lesson);
       this.$emit("add-to-cart", lesson);
     },
   },

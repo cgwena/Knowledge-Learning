@@ -76,15 +76,12 @@ export default {
         ); // Assurez-vous d'avoir une action pour ça
         const purchasedLessons = response.lessons || [];
 
-        console.log("purchased lessons", purchasedLessons);
-        console.log("item", item._id);
         if (purchasedLessons.includes(item._id)) {
           toast.warning(`La leçon "${item.title}" a déjà été achetée.`);
           return;
         }
 
         const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-        console.log("cartItems", cartItems);
 
         const isInCart = cartItems.some(
           (cartItem) => cartItem._id === item._id
@@ -96,7 +93,6 @@ export default {
           return;
         }
 
-        console.log("Ajout au panier:", item);
         this.$store.dispatch("cart/addToCart", item);
         toast.success(`La leçon "${item.title}" a été ajoutée au panier`);
       } catch (error) {

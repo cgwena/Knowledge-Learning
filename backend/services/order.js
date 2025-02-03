@@ -1,9 +1,9 @@
-const Order = require("../models/order");
-const Lesson = require("../models/lesson");
-const Cursus = require("../models/cursus");
-const mongoose = require('mongoose');
+import Order from "../models/order.js";
+import Lesson from "../models/lesson.js";
+import Cursus from "../models/cursus.js";
+import mongoose from 'mongoose';
 
-exports.createOrder = async (req, res) => {
+const createOrder = async (req, res) => {
   const { items } = req.body;
 
   try {
@@ -42,7 +42,7 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-exports.getOrdersByUser = async (req, res) => {
+const getOrdersByUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -56,7 +56,7 @@ exports.getOrdersByUser = async (req, res) => {
   }
 };
 
-exports.getOrderById = async (req, res) => {
+const getOrderById = async (req, res) => {
   const { orderId } = req.params;
 
   // Vérifiez si orderId est un ObjectId valide
@@ -78,7 +78,7 @@ exports.getOrderById = async (req, res) => {
   }
 };
 
-exports.updateOrderStatus = async (req, res) => {
+const updateOrderStatus = async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
 
@@ -98,3 +98,5 @@ exports.updateOrderStatus = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export default { createOrder, getOrdersByUser, getOrderById, updateOrderStatus };

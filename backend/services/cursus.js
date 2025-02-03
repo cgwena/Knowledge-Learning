@@ -1,7 +1,8 @@
-const Cursus = require("../models/cursus");
-const Lesson = require("../models/lesson");
+import Cursus from "../models/cursus.js";
+import Lesson from "../models/lesson.js";
 
-exports.add = async (req, res) => {
+// Ajouter un cursus
+const add = async (req, res) => {
   const { title, price, lessons } = req.body;
 
   // Validation des entrées
@@ -24,7 +25,7 @@ exports.add = async (req, res) => {
 };
 
 // Obtenir tous les cursus
-exports.getAll = async (req, res) => {
+const getAll = async (req, res) => {
   try {
     const cursusList = await Cursus.find().populate("lessons"); // Charge les leçons associées
     return res.status(200).json(cursusList);
@@ -34,7 +35,7 @@ exports.getAll = async (req, res) => {
 };
 
 // Obtenir un cursus par ID
-exports.getById = async (req, res) => {
+const getById = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -48,7 +49,8 @@ exports.getById = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+// Mettre à jour un cursus
+const update = async (req, res) => {
   const { id } = req.params;
   const { title, price, lessons } = req.body;
 
@@ -69,7 +71,8 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+// Supprimer un cursus
+const deleteCursus = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -84,3 +87,5 @@ exports.delete = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export default { add, getAll, getById, update, delete: deleteCursus };

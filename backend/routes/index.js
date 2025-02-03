@@ -1,11 +1,11 @@
-var express = require('express');
-var router = express.Router();
+import express from 'express';
+const router = express.Router();
 
-const userRoute = require('./users')
-const themeRoute = require('./theme')
-const cursusRoute = require('./cursus')
-const lessonRoute = require('./lesson')
-const orderRoutes = require('./order');
+import userRoute from './users.js';
+import themeRoute from './theme.js';
+import cursusRoute from './cursus.js';
+import lessonRoute from './lesson.js';
+import orderRoutes from './order.js';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -18,4 +18,4 @@ router.use('/cursus', cursusRoute)
 router.use('/lesson', lessonRoute)
 router.use('/orders', orderRoutes);
 
-module.exports = router;
+export default router;

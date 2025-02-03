@@ -79,7 +79,6 @@ export default {
       this.editedTheme = { ...this.theme };
     },
     saveTheme() {
-      console.log('editedTheme', this.editedTheme)
       this.$emit('editTheme', this.editedTheme);
       this.isEditing = false;
     },
@@ -93,7 +92,6 @@ export default {
       this.$emit('deleteCursus', cursusId);
     },
     editLesson(lesson) {
-      console.log('editLesson dans themeCard', lesson)
       this.$emit('editLesson', lesson);
     },
     deleteLesson(lesson) {
@@ -115,7 +113,6 @@ export default {
         alert("Veuillez renseigner un titre et un prix valide pour le cursus.");
         return;
       }
-      console.log('submitNewCursus dans themeCard')
 
       const newCursusData = {
         ...this.newCursus,
@@ -124,7 +121,6 @@ export default {
 
       // Émettre un événement pour le parent avec les données du nouveau cursus
       this.$emit('addNewCursus', newCursusData);
-      console.log('newCursus dans ThemeCard', newCursusData)
 
       // Réinitialiser le formulaire
       this.isAddingCursus = false;

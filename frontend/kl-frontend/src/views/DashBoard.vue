@@ -64,8 +64,6 @@ export default {
   async created() {
     if (this.isAuthenticated) {
         const response = await getUserInfo(); // Appel pour récupérer les données utilisateur
-        console.log('leçons user', response.data.lessons)
-        console.log('cursus user', response.data.cursus)
         this.userLessons = response.data.lessons; 
         this.userCursus = response.data.cursus
         this.userCertifiedCursus = response.data.cursus.filter((cursus) => cursus.isCompleted === true)    

@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     handleAddToCart(cursus) {
-      console.log("Ajout au panier depuis CursusCard:", cursus);
       this.$emit("add-to-cart", cursus);
     },
   },

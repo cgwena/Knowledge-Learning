@@ -1,17 +1,31 @@
-const mongoose= require('mongoose')
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import path from 'path';
 
+// Utilisation de import.meta.url pour obtenir le répertoire actuel
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+// Charger les variables d'environnement depuis le fichier .env dans le dossier 'env'
+dotenv.config({ path: path.resolve(__dirname, '../env/.env') });
 
 const clientOptions = {
     useNewUrlParser: true,
-    dbname: 'Knowledge-Learning'
-}
+    useUnifiedTopology: true,
+    dbname: 'Knowledge-Learning',
+};
 
-exports.clientDbInitCommection = async() => {
+const clientDbInitConnection = async () => {
     try {
-        await mongoose.connect(process.env.URL_MONGO, clientOptions)
-        console.log('connected')
+        const mongoUri = process.env.URL_MONGO;
+        if (!mongoUri) {
+            throw new Error('Mongo URI is undefined. Please check your .env file.');
+        }
+        await mongoose.connect(mongoUri, clientOptions);
+        console.log('Connected to MongoDB');
     } catch (e) {
-        console.log(e)
-        throw e
+        console.log('Error connecting to MongoDB:', e);
+        throw e;
     }
-}
+};
+
+export default clientDbInitConnection;

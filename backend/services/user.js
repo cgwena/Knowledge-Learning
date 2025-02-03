@@ -1,11 +1,11 @@
-const User = require("../models/user");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+import User from "../models/user.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
-const SECRET_KEY = process.env.SECRET_KEY;
+const JWT_SECRET = process.env.JWT_SECRET;
 
-exports.registerUser = async (req, res) => {
+const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -23,7 +23,6 @@ exports.registerUser = async (req, res) => {
     await newUser.save();
 
     const savedUser = await User.findOne({ email });
- 
 
     // Générer un token de confirmation
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
@@ -61,7 +60,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-exports.confirmRegistration = async (req, res) => {
+const confirmRegistration = async (req, res) => {
   try {
     // Récupérer le token depuis la query string
     const { token } = req.params;
@@ -95,9 +94,8 @@ exports.confirmRegistration = async (req, res) => {
   }
 };
 
-exports.authenticate = async (req, res, next) => {
+const authenticate = async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(email, password);
 
   try {
     // Recherche de l'utilisateur
@@ -107,16 +105,11 @@ exports.authenticate = async (req, res, next) => {
     );
 
     if (!user) {
-      console.log("User not found");
       return res.status(404).json({ error: "User not found" });
     }
-    console.log("Mot de passe reçu en entrée:", password);
-    console.log("Mot de passe en base de données:", user.password);
+
     // Vérification du mot de passe
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log("Password entered:", password);
-    console.log("Password stored:", user.password);
-    console.log("Is password valid?", isPasswordValid);
     if (!isPasswordValid) {
       return res.status(403).json({ error: "Invalid credentials" });
     }
@@ -127,7 +120,7 @@ exports.authenticate = async (req, res, next) => {
 
     // Création du token JWT
     const expireIn = 24 * 60 * 60; // 24 heures
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: expireIn });
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: expireIn });
 
     // Envoi du token dans les headers
     res.header("Authorization", "Bearer " + token);
@@ -143,7 +136,7 @@ exports.authenticate = async (req, res, next) => {
 };
 
 // Obtenir tous les users
-exports.getAll = async (req, res) => {
+const getAll = async (req, res) => {
   try {
     const UserList = await User.find();
     return res.status(200).json(UserList);
@@ -152,7 +145,7 @@ exports.getAll = async (req, res) => {
   }
 };
 
-exports.getById = async (req, res, next) => {
+const getById = async (req, res, next) => {
   const id = req.params.id;
 
   try {
@@ -167,7 +160,7 @@ exports.getById = async (req, res, next) => {
   }
 };
 
-exports.add = async (req, res, next) => {
+const add = async (req, res, next) => {
   const temp = {
     name: req.body.name,
     firstname: req.body.firstname,
@@ -184,7 +177,7 @@ exports.add = async (req, res, next) => {
   }
 };
 
-exports.update = async (req, res, next) => {
+const update = async (req, res, next) => {
   const id = req.params.id;
   const temp = {};
   if (req.body.name) temp.name = req.body.name;
@@ -212,20 +205,10 @@ exports.update = async (req, res, next) => {
   }
 };
 
-exports.markLessonAsCompleted = async (req, res) => {
-  console.log("✅ Requête reçue :", req.method, req.url);
-  console.log("Params reçus :", req.params); // Vérifie si lessonId est présent
-  console.log(
-    "Utilisateur ID :",
-    req.decoded ? req.decoded.id : "Non authentifié"
-  );
-
+const markLessonAsCompleted = async (req, res) => {
   try {
     const userId = req.decoded.id;
     const { lessonId } = req.params; // 🔹 Bien récupérer lessonId depuis params
-
-    console.log("🔹 userId :", userId);
-    console.log("🔹 lessonId :", lessonId);
 
     const user = await User.findById(userId);
     if (!user) {
@@ -247,13 +230,25 @@ exports.markLessonAsCompleted = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res, next) => {
+const deleteUser = async (req, res, next) => {
   const id = req.params.id;
-
+  
   try {
     await User.deleteOne({ _id: id });
     return res.status(204).json("user deleted");
   } catch (error) {
     return res.status(501).json(error);
   }
+};
+
+export default {
+  registerUser,
+  confirmRegistration,
+  authenticate,
+  getAll,
+  getById,
+  add,
+  update,
+  markLessonAsCompleted,
+  delete: deleteUser,
 };
