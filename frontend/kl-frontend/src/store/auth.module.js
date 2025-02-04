@@ -87,7 +87,7 @@ const actions = {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        `http://localhost:3000/users/${userId}`,
+        `http://localhost:3000/user/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -114,7 +114,7 @@ const actions = {
 
       // Requête pour récupérer les leçons
       const response = await axios.get(
-        `http://localhost:3000/users/${userId}`,
+        `http://localhost:3000/user/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

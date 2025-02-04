@@ -14,6 +14,8 @@ import Register from '@/views/RegisterUser.vue'
 import Confirm from '@/views/ConfirmUser.vue'
 import AdminDashboard from '@/views/AdminDashboard.vue';
 import Certifications from '@/views/UserCertifications.vue';
+import StripeSuccess from '@/views/StripeSuccess.vue';
+import StripeCancel from '@/views/StripeCancel.vue';
 
 const routes = [
   {
@@ -68,6 +70,16 @@ const routes = [
     name: "LessonDetails",
     component: LessonDetails,
     props: true,
+  },
+  {
+    path: "/cancel",
+    name: "StripeCancel",
+    component: StripeCancel,
+  },
+  {
+    path: "/success",
+    name: "StripeSuccess",
+    component: StripeSuccess,
   },
   {
     path: '/:catchAll(.*)',

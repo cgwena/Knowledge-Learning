@@ -30,7 +30,7 @@
 import ActionButton from "@/components/ActionButton.vue";
 import { getOrderById, payOrder } from "@/services/order.service";
 import { fetchCursusById, fetchLessonById } from "@/services/lesson.service";
-import { updateUserLessonsAndCursus } from "@/services/user.service";
+//import { updateUserLessonsAndCursus } from "@/services/user.service";
 
 export default {
   name: "OrderRecap",
@@ -55,52 +55,17 @@ export default {
   },
   methods: {
     async handlePayOrder() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user._id;
+      try {
+        // Récupérer l'URL de paiement depuis Stripe
+        const response = await payOrder(this.order._id, this.order.items);
 
-  try {
-    // Récupérer les objets complets pour chaque item
-    const itemData = await Promise.all(
-      this.order.items.map(async (item) => {
-        let data;
-        
-        // Utiliser la bonne fonction en fonction du type
-        if (item.type === "cursus") {
-          const response = await fetchCursusById(item.itemId);
-          data = response;
-        } else if (item.type === "lesson") {
-          const response = await fetchLessonById(item.itemId);
-          data = response;
-        }
+        window.location.href = response.url;
 
-        return {
-          id: item.itemId, // ID de l'objet
-          type: item.type, // Type (cursus ou lesson)
-          data, // Objet complet récupéré depuis l'API
-          isCompleted: false, // Initialisation à false
-        };
-      })
-    );
-
-    // Mettre à jour les leçons et cursus de l'utilisateur
-    const updatedUser = await updateUserLessonsAndCursus(userId, itemData);
-
-    // Mettre à jour le store et le localStorage
-    this.$store.commit("SET_USER", updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-
-    // Finaliser le paiement
-    await payOrder(this.order._id);
-
-    // Rediriger l'utilisateur
-    this.$store.dispatch("cart/clearCart");
-    alert("Paiement réussi !");
-    this.$router.push({ name: "Dashboard" });
-  } catch (error) {
-    console.error("Erreur lors du paiement :", error);
-    alert("Une erreur est survenue lors du paiement.");
-  }
-},
+      } catch (error) {
+        console.error("Erreur lors du paiement :", error);
+        alert("Une erreur est survenue lors du paiement.");
+      }
+    },
     async enrichOrderItems() {
       const enrichedItems = await Promise.all(
         this.order.items.map(async (item) => {

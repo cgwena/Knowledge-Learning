@@ -6,6 +6,7 @@ import themeRoute from './theme.js';
 import cursusRoute from './cursus.js';
 import lessonRoute from './lesson.js';
 import orderRoutes from './order.js';
+import stripeRoutes from './stripe.js'
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -17,5 +18,6 @@ router.use('/theme', themeRoute)
 router.use('/cursus', cursusRoute)
 router.use('/lesson', lessonRoute)
 router.use('/orders', orderRoutes);
+router.use('/stripe', stripeRoutes)
 
 export default router;

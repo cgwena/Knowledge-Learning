@@ -31,6 +31,7 @@ export default {
   },
   actions: {
     addToCart({ commit }, item) {
+      console.log("addToCart appelée", item);
       commit("ADD_TO_CART", item);
     },
     removeFromCart({ commit }, item) {

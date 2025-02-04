@@ -65,15 +65,19 @@ export default {
   methods: {
     ...mapActions("cart", ["addToCart", "removeFromCart"]),
     async handleAddToCart(item) {
+      console.log('handleAddToCart appelée');
       try {
         // Récupérer l'utilisateur et ses leçons
         const user = JSON.parse(localStorage.getItem("user"));
         const userId = user._id;
+        console.log('userId:', userId)
+        
 
         const response = await this.$store.dispatch(
           "auth/fetchUserById",
           userId
-        ); // Assurez-vous d'avoir une action pour ça
+        );
+        console.log('response:', response)
         const purchasedLessons = response.lessons || [];
 
         if (purchasedLessons.includes(item._id)) {
