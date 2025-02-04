@@ -5,6 +5,7 @@ import url from 'url';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import cors from 'cors';
+import Stripe from 'stripe';
 
 // Détermine le répertoire courant avec import.meta.url
 const __filename = url.fileURLToPath(import.meta.url);
@@ -36,7 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
