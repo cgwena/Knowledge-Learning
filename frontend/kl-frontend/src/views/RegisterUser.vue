@@ -16,7 +16,14 @@
       </div>
       <div>
         <label for="password">Mot de passe</label>
-        <input type="password" id="password" v-model="password" required />
+        <input
+          type="password"
+          id="password"
+          v-model="password"
+          @input="validatePassword"
+          required
+        />
+        <p v-if="passwordError" style="color: red">{{ passwordError }}</p>
       </div>
       <div>
         <label for="confirmPassword">Confirmer le mot de passe</label>
@@ -45,9 +52,18 @@ export default {
       password: "",
       confirmPassword: "",
       message: "",
+      passwordError: "",
     };
   },
   methods: {
+    validatePassword() {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!regex.test(this.password)) {
+        this.passwordError = "Doit contenir : 8+ caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.";
+      } else {
+        this.passwordError = "";
+      }
+    },
     async registerUser() {
       if (this.password !== this.confirmPassword) {
         this.message = "Les mots de passe ne correspondent pas.";

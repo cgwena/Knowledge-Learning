@@ -5,9 +5,21 @@ import nodemailer from "nodemailer";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const validatePassword = (password) => {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return regex.test(password);
+};
+
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        error:
+          "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
+      });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {

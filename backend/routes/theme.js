@@ -12,7 +12,7 @@ import middleware from '../middlewares/private.js';
 
 /**
  * @swagger
- * /themes/:
+ * /theme/:
  *   get:
  *     summary: Récupérer tous les thèmes
  *     description: Retourne la liste de tous les thèmes disponibles.
@@ -28,7 +28,7 @@ router.get('/', service.getAll);
 
 /**
  * @swagger
- * /themes/{id}:
+ * /theme/{id}:
  *   get:
  *     summary: Récupérer un thème par ID
  *     description: Retourne un thème spécifique en fonction de son ID. Nécessite une authentification.
@@ -57,7 +57,7 @@ router.get('/:id', middleware.checkJWT, service.getById);
 
 /**
  * @swagger
- * /themes/add:
+ * /theme/add:
  *   post:
  *     summary: Ajouter un nouveau thème
  *     description: Crée un nouveau thème. Nécessite une authentification et des droits administrateurs.
@@ -91,7 +91,7 @@ router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
 
 /**
  * @swagger
- * /themes/{id}:
+ * /theme/{id}:
  *   put:
  *     summary: Mettre à jour un thème
  *     description: Met à jour les informations d'un thème existant. Nécessite une authentification et des droits administrateurs.
@@ -134,7 +134,7 @@ router.put('/:id', middleware.checkJWT, middleware.checkAdmin, service.update);
 
 /**
  * @swagger
- * /themes/{id}:
+ * /theme/{id}:
  *   delete:
  *     summary: Supprimer un thème
  *     description: Supprime un thème existant. Nécessite une authentification et des droits administrateurs.
@@ -165,7 +165,7 @@ router.delete('/:id', middleware.checkJWT, middleware.checkAdmin, service.delete
 
 /**
  * @swagger
- * /themes/add-cursus:
+ * /theme/add-cursus:
  *   post:
  *     summary: Ajouter un cursus à un thème
  *     description: Ajoute un cursus à un thème existant. Nécessite des droits administrateurs.
