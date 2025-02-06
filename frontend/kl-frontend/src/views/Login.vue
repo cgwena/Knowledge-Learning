@@ -3,6 +3,7 @@
     <h1>Bienvenue chez KnowledgeLearning</h1>
     <p>Veuillez vous connecter pour accéder à votre compte</p>
     <LoginForm />
+    <a href="/register">S'inscrire</a>
 </template>
 
 <script>
@@ -17,4 +18,10 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+img {
+    height: 64px;
+    border-radius: 16px;
+    margin-left: 16px;
+}
+</style>

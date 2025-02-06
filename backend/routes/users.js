@@ -13,7 +13,7 @@ import middleware from '../middlewares/private.js';
 
 /**
  * @swagger
- * /users/:
+ * /user/:
  *   get:
  *     summary: Récupérer tous les utilisateurs
  *     description: Retourne la liste de tous les utilisateurs disponibles. Nécessite une authentification.
@@ -33,7 +33,7 @@ router.get('/', middleware.checkJWT, service.getAll);
 
 /**
  * @swagger
- * /users/{id}:
+ * /user/{id}:
  *   get:
  *     summary: Récupérer un utilisateur par ID
  *     description: Retourne un utilisateur spécifique en fonction de son ID. Nécessite une authentification.
@@ -62,7 +62,7 @@ router.get('/:id', middleware.checkJWT, service.getById);
 
 /**
  * @swagger
- * /users/add:
+ * /user/add:
  *   post:
  *     summary: Ajouter un nouvel utilisateur
  *     description: Crée un nouvel utilisateur sans authentification requise.
@@ -96,7 +96,7 @@ router.post('/add', service.add);
 
 /**
  * @swagger
- * /users/update/{id}:
+ * /user/update/{id}:
  *   patch:
  *     summary: Mettre à jour un utilisateur
  *     description: Met à jour les informations d'un utilisateur existant. Nécessite une authentification.
@@ -140,7 +140,7 @@ router.patch('/update/:id', middleware.checkJWT, service.update);
 
 /**
  * @swagger
- * /users/delete/{id}:
+ * /user/delete/{id}:
  *   delete:
  *     summary: Supprimer un utilisateur
  *     description: Supprime un utilisateur existant. Nécessite une authentification.
@@ -169,7 +169,7 @@ router.delete('/delete/:id', middleware.checkJWT, service.delete);
 
 /**
  * @swagger
- * /users/authenticate:
+ * /user/authenticate:
  *   post:
  *     summary: Authentifier un utilisateur
  *     description: Vérifie les identifiants de l'utilisateur et retourne un token JWT en cas de succès.
@@ -229,7 +229,7 @@ router.patch('/lessons/:lessonId/complete', middleware.checkJWT, service.markLes
 
 /**
  * @swagger
- * /users/register:
+ * /user/register:
  *   post:
  *     summary: Inscrire un nouvel utilisateur
  *     description: Permet à un utilisateur de s'inscrire en fournissant son email et son mot de passe.
@@ -260,7 +260,7 @@ router.post('/register', service.registerUser);
 
 /**
  * @swagger
- * /users/confirm/{token}:
+ * /user/confirm/{token}:
  *   get:
  *     summary: Confirmer l'inscription d'un utilisateur
  *     description: Vérifie le token d'inscription et active le compte utilisateur.
