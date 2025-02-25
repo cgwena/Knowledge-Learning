@@ -47,7 +47,7 @@ export default {
 
     try {
       const response = await getOrderById(orderId);
-      this.order = response.data;
+      this.order = response;
       await this.enrichOrderItems();
     } catch (error) {
       console.error("Erreur lors de la récupération de la commande :", error);
@@ -58,7 +58,7 @@ export default {
       try {
         // Récupérer l'URL de paiement depuis Stripe
         const response = await payOrder(this.order._id, this.order.items);
-
+        console.log('response', response);
         window.location.href = response.url;
 
       } catch (error) {

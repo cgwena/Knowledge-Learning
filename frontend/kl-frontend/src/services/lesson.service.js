@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axiosInstance from "../services/axios";
 
 export const getThemes = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/theme');
-    return response.data; // Retourne les données des thèmes
+    const response = await axiosInstance.get('http://localhost:3000/themes');
+    return response; // Retourne les données des thèmes
   } catch (error) {
     console.error("Erreur lors de la récupération des thèmes", error);
     throw error; // Lance l'erreur pour qu'elle soit gérée par le composant
@@ -12,7 +12,7 @@ export const getThemes = async () => {
 
 export const fetchThemeById = async(id) => {
   const token = localStorage.getItem("token");
-  const response = await axios.get(`http://localhost:3000/theme/${id}`,{
+  const response = await axiosInstance.get(`http://localhost:3000/themes/${id}`,{
     headers: {
         Authorization: `Bearer ${token}`, // Envoyer le token dans les en-têtes
       },
@@ -24,7 +24,7 @@ export const fetchThemeById = async(id) => {
 export const addTheme = async (themeData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.post('http://localhost:3000/theme/add', themeData, {
+    const response = await axiosInstance.post('http://localhost:3000/themes/add', themeData, {
       headers: {
         Authorization: `Bearer ${token}`, // Envoi du token dans les en-têtes
       },
@@ -40,7 +40,7 @@ export const addTheme = async (themeData) => {
 export const updateTheme = async (id, themeData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.put(`http://localhost:3000/theme/${id}`, themeData, {
+    const response = await axiosInstance.put(`http://localhost:3000/themes/${id}`, themeData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -56,7 +56,7 @@ export const updateTheme = async (id, themeData) => {
 export const deleteTheme = async (id) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.delete(`http://localhost:3000/theme/${id}`, {
+    const response = await axiosInstance.del(`http://localhost:3000/themes/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -70,19 +70,19 @@ export const deleteTheme = async (id) => {
 
 export const fetchCursusById = async(id) => {
   const token = localStorage.getItem("token");
-  const response = await axios.get(`http://localhost:3000/cursus/${id}`,{
+  const response = await axiosInstance.get(`http://localhost:3000/cursus/${id}`,{
     headers: {
         Authorization: `Bearer ${token}`, // Envoyer le token dans les en-têtes
       },
   });
-  return response.data
+  return response
 }
 
 // Ajouter un cursus
 export const addCursus = async (cursusData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.post("http://localhost:3000/cursus/add", cursusData, {
+    const response = await axiosInstance.post("http://localhost:3000/cursus/add", cursusData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -98,7 +98,7 @@ export const addCursus = async (cursusData) => {
 export const updateCursus = async (id, cursusData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.put(`http://localhost:3000/cursus/${id}`, cursusData, {
+    const response = await axiosInstance.put(`http://localhost:3000/cursus/${id}`, cursusData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -114,7 +114,7 @@ export const updateCursus = async (id, cursusData) => {
 export const deleteCursus = async (id) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.delete(`http://localhost:3000/cursus/${id}`, {
+    const response = await axiosInstance.del(`http://localhost:3000/cursus/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -128,19 +128,19 @@ export const deleteCursus = async (id) => {
 
 export const fetchLessonById = async(id) => {
   const token = localStorage.getItem("token");
-  const response = await axios.get(`http://localhost:3000/lesson/${id}`,{
+  const response = await axiosInstance.get(`http://localhost:3000/lessons/${id}`,{
     headers: {
         Authorization: `Bearer ${token}`, // Envoyer le token dans les en-têtes
       },
   });
-  return response.data
+  return response
 }
 
 // Ajouter une leçon
 export const addLesson = async (lessonData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.post("http://localhost:3000/lesson/add", lessonData, {
+    const response = await axiosInstance.post("http://localhost:3000/lessons/add", lessonData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -156,7 +156,7 @@ export const addLesson = async (lessonData) => {
 export const updateLesson = async (id, lessonData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.put(`http://localhost:3000/lesson/${id}`, lessonData, {
+    const response = await axiosInstance.put(`http://localhost:3000/lessons/${id}`, lessonData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -172,7 +172,7 @@ export const updateLesson = async (id, lessonData) => {
 export const deleteLesson = async (id) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.delete(`http://localhost:3000/lesson/${id}`, {
+    const response = await axiosInstance.del(`http://localhost:3000/lessons/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

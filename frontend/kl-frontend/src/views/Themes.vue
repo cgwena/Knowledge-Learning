@@ -28,7 +28,7 @@
 import NavBar from "@/components/layout/Navbar.vue";
 import ThemeCard from "@/components/cours/ThemeCard.vue";
 import { getThemes } from "@/services/lesson.service";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { toast } from "vue3-toastify";
 
 export default {
@@ -60,6 +60,8 @@ export default {
     isAuthenticated() {
       return this.$store.getters["auth/isAuthenticated"];
     },
+    ...mapGetters("auth", ["isAuthenticated", "getUser", "isAdmin"]),
+  
   },
 
   methods: {
@@ -68,28 +70,23 @@ export default {
       console.log('handleAddToCart appelée');
       try {
         // Récupérer l'utilisateur et ses leçons
-        const user = JSON.parse(localStorage.getItem("user"));
-        const userId = user._id;
-        console.log('userId:', userId)
+        const user = this.$store.getters["auth/getUser"];
         
-
-        const response = await this.$store.dispatch(
-          "auth/fetchUserById",
-          userId
-        );
-        console.log('response:', response)
-        const purchasedLessons = response.lessons || [];
+        const purchasedLessons = user.lessons || [];
 
         if (purchasedLessons.includes(item._id)) {
           toast.warning(`La leçon "${item.title}" a déjà été achetée.`);
           return;
         }
 
-        const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+
+        console.log("cartItems:", cartItems, "Type:", typeof cartItems);
 
         const isInCart = cartItems.some(
           (cartItem) => cartItem._id === item._id
         );
+
         if (isInCart) {
           toast.warning(
             `La leçon "${item.title}" a déjà été ajoutée au panier.`

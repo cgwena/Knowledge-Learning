@@ -1,8 +1,8 @@
-import axios from "axios";
+import axiosInstance from "../services/axios";
 
 export const getUsers = async() => {
   const token = localStorage.getItem("token");
-  const response = await axios.get(`http://localhost:3000/user/`, {
+  const response = await axiosInstance.get(`http://localhost:3000/users/`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -21,28 +21,24 @@ export const getUserInfo = async () => {
   }
 
   // Requête pour récupérer les leçons
-  const response = await axios.get(`http://localhost:3000/user/${userId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await axiosInstance.get(`http://localhost:3000/users/${userId}`);
   return response;
 };
 
 // Fonction pour s'inscrire
 export const registerUser = async (userData) => {
-  const response = await axios.post("http://localhost:3000/user/register", userData);
+  const response = await axiosInstance.post("http://localhost:3000/users/register", userData);
   return response; // Retourne la réponse de l'inscription
 };
 
 export const confirmRegistration = async (token) => {
-  const response = await axios.get(`http://localhost:3000/user/confirm/${token}`);
+  const response = await axiosInstance.get(`http://localhost:3000/users/confirm/${token}`);
   return response.data;
 };
 
 // Fonction pour se connecter
 export const loginUser = async (email, password) => {
-  const response = await axios.post("http://localhost:3000/user/authenticate", {
+  const response = await axiosInstance.post("http://localhost:3000/users/authenticate", {
     email,
     password,
   });
@@ -52,7 +48,7 @@ export const loginUser = async (email, password) => {
 export const addUser = async (userData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.post("http://localhost:3000/user/add", userData, {
+    const response = await axiosInstance.post("http://localhost:3000/users/add", userData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -67,8 +63,8 @@ export const addUser = async (userData) => {
 // Fonction pour mettre à jour les informations utilisateur
 export const updateUserInfo = async (userId, userData) => {
   const token = localStorage.getItem("token");
-  const response = await axios.patch(
-    `http://localhost:3000/user/update/${userId}`,
+  const response = await axiosInstance.patch(
+    `http://localhost:3000/users/update/${userId}`,
     userData,
     {
       headers: {
@@ -100,22 +96,22 @@ export async function updateUserLessonsAndCursus(userId, items) {
         lessons: item.data.lessons, // Ajoutez les leçons associées si nécessaire
       }));
 
-    const userResponse = await axios.get(`http://localhost:3000/user/${userId}`, {
+    const userResponse = await axiosInstance.get(`http://localhost:3000/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const existingLessons = userResponse.data.lessons || [];
-    const existingCursus = userResponse.data.cursus || [];
+    const existingLessons = userResponse.lessons || [];
+    const existingCursus = userResponse.cursus || [];
 
     // Fusionner les anciennes et nouvelles données
     const updatedLessons = [...existingLessons, ...newLessons];
     const updatedCursus = [...existingCursus, ...newCursus];
 
     // Requête API pour mettre à jour l'utilisateur
-    const response = await axios.patch(
-      `http://localhost:3000/user/update/${userId}`,
+    const response = await axiosInstance.patch(
+      `http://localhost:3000/users/update/${userId}`,
       {
         lessons: updatedLessons,
         cursus: updatedCursus,
@@ -126,7 +122,7 @@ export async function updateUserLessonsAndCursus(userId, items) {
         },
       }
     );
-    return response.data; // Retourne l'utilisateur mis à jour
+    return response; // Retourne l'utilisateur mis à jour
   } catch (error) {
     console.error("Erreur lors de la mise à jour des données utilisateur :", error);
     throw error;
@@ -137,7 +133,7 @@ export async function markLessonAsCompleted(lessonId) {
   const token = localStorage.getItem("token");
   console.log(lessonId)
   try {
-    const response = await axios.patch(`http://localhost:3000/user/lessons/${lessonId}/complete`
+    const response = await axiosInstance.patch(`http://localhost:3000/users/lessons/${lessonId}/complete`
       ,{},
       {
       headers: {
@@ -154,7 +150,7 @@ export async function markLessonAsCompleted(lessonId) {
 // Fonction pour supprimer un compte utilisateur
 export const deleteUser = async (userId) => {
   const token = localStorage.getItem("token");
-  const response = await axios.delete(`http://localhost:3000/user/delete/${userId}`,
+  const response = await axiosInstance.del(`http://localhost:3000/users/delete/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

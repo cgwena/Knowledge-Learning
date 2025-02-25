@@ -2,24 +2,22 @@ export default {
   namespaced: true,
   state: {
     cartItems: JSON.parse(localStorage.getItem("cartItems")) || [],
-    cartTotal: parseFloat(localStorage.getItem("cartTotal")) || 0, // Convertir en nombre
+    cartTotal: parseFloat(localStorage.getItem("cartTotal")) || 0,
   },
   mutations: {
     ADD_TO_CART(state, item) {
       state.cartItems.push(item);
-      state.cartTotal += parseFloat(item.price); // Assurez-vous que le prix est un nombre
+      state.cartTotal += parseFloat(item.price);
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
-      localStorage.setItem("cartTotal", state.cartTotal.toFixed(2)); // Stockez une chaîne formatée
+      localStorage.setItem("cartTotal", state.cartTotal.toFixed(2));
     },
     REMOVE_FROM_CART(state, item) {
-      const index = state.cartItems.findIndex(
-        (cartItem) => cartItem._id === item._id
-      );
+      const index = state.cartItems.findIndex((cartItem) => cartItem._id === item._id);
       if (index !== -1) {
         state.cartItems.splice(index, 1);
-        state.cartTotal -= parseFloat(item.price); // Soustrayez le prix comme un nombre
+        state.cartTotal -= parseFloat(item.price);
         localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
-        localStorage.setItem("cartTotal", state.cartTotal.toFixed(2)); // Stockez une chaîne formatée
+        localStorage.setItem("cartTotal", state.cartTotal.toFixed(2));
       }
     },
     CLEAR_CART(state) {
@@ -31,7 +29,6 @@ export default {
   },
   actions: {
     addToCart({ commit }, item) {
-      console.log("addToCart appelée", item);
       commit("ADD_TO_CART", item);
     },
     removeFromCart({ commit }, item) {
@@ -43,6 +40,6 @@ export default {
   },
   getters: {
     cartItems: (state) => state.cartItems,
-    cartTotal: (state) => state.cartTotal.toFixed(2), // Retourne une chaîne formatée pour les affichages
+    cartTotal: (state) => state.cartTotal.toFixed(2),
   },
 };
