@@ -1,20 +1,48 @@
 import axios from "axios";
-import store from '@/store'
+import store from "@/store";
+
+let csrfToken = null; // Toujours récupérer un token à jour
 
 const axiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: "http://localhost:3000",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "application/json", 
   },
+  withCredentials: true, // Assurez-vous que les cookies sont envoyés
 });
 
+// Récupérer le token CSRF et l'ajouter aux headers
+const getCsrfToken = async () => {
+  try {
+    const response = await axiosInstance.get("/csrf-token");
+    csrfToken = response.data.csrfToken;
+
+    if (csrfToken) {
+      localStorage.setItem("csrfToken", csrfToken);
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération du token CSRF :", error);
+  }
+};
+
+// Appeler `getCsrfToken()` en arrière-plan
+getCsrfToken();
+
+// Intercepteur de requêtes
 axiosInstance.interceptors.request.use(
-  (config) => {
-    // Vérifiez le token dans le store
-    const token = store.getters['auth/authToken'];
-    
+  async (config) => {
+    const csrfToken = document.cookie
+    .split("; ")
+    .find(row => row.startsWith("XSRF-TOKEN="))
+    ?.split("=")[1];
+
+  if (csrfToken) {
+    config.headers["X-XSRF-TOKEN"] = csrfToken;
+  }
+
+    const token = store.getters["auth/authToken"];
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`; // Ajoutez le token à la requête
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
 
     return config;
@@ -24,44 +52,20 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Intercepteur de réponses (facultatif)
+// Intercepteur de réponses
 axiosInstance.interceptors.response.use(
-  (response) => {
-    return response.data; // Retourne directement les données de la réponse
-  },
+  (response) => response.data,
   (error) => {
-    console.error("Erreur lors de la requête API:", error.response || error);
-    return Promise.reject(error); // Vous pouvez aussi gérer l'erreur ici, par exemple, afficher un message
+    console.error("Erreur API :", error.response || error);
+    return Promise.reject(error);
   }
 );
 
-// Fonction pour effectuer une requête GET
-const get = async (url, params = {}) => {
-  const response = await axiosInstance.get(url, { params });
-  return response;
-};
+// Fonctions utilitaires pour requêtes HTTP
+const get = async (url, params = {}) => axiosInstance.get(url, { params });
+const post = async (url, data) => axiosInstance.post(url, data);
+const put = async (url, data) => axiosInstance.put(url, data);
+const patch = async (url, data) => axiosInstance.patch(url, data);
+const del = async (url) => axiosInstance.delete(url);
 
-// Fonction pour effectuer une requête POST
-const post = async (url, data) => {
-  const response = await axiosInstance.post(url, data);
-  return response;
-};
-
-// Fonction pour effectuer une requête PUT
-const put = async (url, data) => {
-  const response = await axiosInstance.put(url, data);
-  return response;
-};
-
-// Fonction pour effectuer une requête DELETE
-const del = async (url) => {
-  const response = await axiosInstance.delete(url);
-  return response;
-};
-
-export default {
-  get,
-  post,
-  put,
-  delete: del,
-};
+export default { get, post, put, patch, delete: del };

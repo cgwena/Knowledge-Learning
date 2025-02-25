@@ -71,6 +71,7 @@ export default {
           type, 
         };
       });
+      console.log('items', items);
       const orderData = {
         items,
         totalPrice: this.cartTotal,
@@ -79,7 +80,7 @@ export default {
         const response = await createOrder(orderData);
 
         // Vider le panier
-        const orderId = response.data._id
+        const orderId = response._id
         // Rediriger vers la page récapitulative
         this.$router.push(`/payment/${orderId}`);
       } catch (error) {

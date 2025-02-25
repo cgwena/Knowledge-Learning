@@ -64,9 +64,10 @@ export default {
   async created() {
     if (this.isAuthenticated) {
         const response = await getUserInfo(); // Appel pour récupérer les données utilisateur
-        this.userLessons = response.data.lessons; 
-        this.userCursus = response.data.cursus
-        this.userCertifiedCursus = response.data.cursus.filter((cursus) => cursus.isCompleted === true)    
+        console.log(response)
+        this.userLessons = response.lessons; 
+        this.userCursus = response.cursus
+        this.userCertifiedCursus = response.cursus.filter((cursus) => cursus.isCompleted === true)    
       }
   },
   methods: {

@@ -56,7 +56,7 @@ export default {
           email: this.email,
           password: this.password,
         });
-        if (response.data.token) {
+        if (response.token) {
           // Le token est automatiquement géré dans Vuex et localStorage
           this.$router.push("/themes"); // Rediriger vers la page suivante
         } else {

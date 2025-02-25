@@ -3,6 +3,7 @@ const router = express.Router();
 
 import service from '../services/lesson.js';
 import middleware from '../middlewares/private.js';
+
 /**
  * @swagger
  * tags:

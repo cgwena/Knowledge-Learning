@@ -13,10 +13,14 @@ router.get('/', function(req, res, next) {
   res.status(200).json({ message: 'Endpoint actif !' });
 });
 
-router.use('/user', userRoute)
-router.use('/theme', themeRoute)
+router.get("/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+router.use('/users', userRoute)
+router.use('/themes', themeRoute)
 router.use('/cursus', cursusRoute)
-router.use('/lesson', lessonRoute)
+router.use('/lessons', lessonRoute)
 router.use('/orders', orderRoutes);
 router.use('/stripe', stripeRoutes)
 

@@ -5,7 +5,7 @@ import url from "url";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import cors from "cors";
-import Stripe from "stripe";
+import csrf from "csurf";
 
 import swaggerjsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
@@ -58,20 +58,36 @@ app.set("view engine", "pug");
 
 app.use(
   cors({
+    origin: "http://localhost:8080",
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "X-XSRF-TOKEN"],
     exposedHeaders: ["Authorization"],
-    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   })
 );
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use((req, res, next) => {
+  res.cookie("XSRF-TOKEN", req.csrfToken(), { httpOnly: false, secure: false, sameSite: "Lax" });
+  next();
+});
+
 
 app.use("/", indexRouter);
 
 const swaggerDocs = swaggerjsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+//Route pour valider le token CSRF
+app.post("/validate-csrf-token", (req, res) => {
+  const isValid = req.csrfToken() === req.headers["x-csrf-token"];
+  res.json({ valid: isValid });
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -80,12 +96,18 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
+  // Gérer les erreurs CSRF
+  if (err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).json({ message: 'Token CSRF invalide ou manquant' });
+  }
+
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
   res.status(err.status || 500);
+  res.json({ message: err.message });
 });
 
 export default app;

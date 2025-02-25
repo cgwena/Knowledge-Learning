@@ -3,6 +3,7 @@ const router = express.Router();
 
 import service from '../services/theme.js';
 import middleware from '../middlewares/private.js';
+
 /**
  * @swagger
  * tags:
