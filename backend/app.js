@@ -48,7 +48,12 @@ import indexRouter from "./routes/index.js";
 import clientDbInitConnection from "./db/mongo.js"; // Import de la fonction directement
 
 // Initialisation de la connexion à la DB
-clientDbInitConnection();
+clientDbInitConnection()
+  .catch((err) => {
+    console.error('Failed to connect to MongoDB:', err);
+    process.exit(1); // Optionnel : arrête le process si tu veux éviter de démarrer sans DB
+  });
+
 
 var app = express();
 

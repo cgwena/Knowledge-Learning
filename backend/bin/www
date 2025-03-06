@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
+import dotenv from 'dotenv';
+dotenv.config(); // Charge le .env ici
+
 import app from '../app.js';
 import debug from 'debug';
 import http from 'http';

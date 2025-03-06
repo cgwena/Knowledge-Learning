@@ -1,8 +1,7 @@
-import { describe, it } from "mocha";
-import sinon from "sinon";
+import { describe, it, before, after, beforeEach, afterEach } from "mocha";
 import request from "supertest";
 import { expect } from "chai";
-import app from "../app.js"; // Assure-toi que ce chemin est correct
+import app from "../app.js";
 import mongoose from "mongoose";
 import Order from "../models/order.js";
 import Lesson from "../models/lesson.js";
@@ -11,13 +10,29 @@ import User from "../models/user.js";
 
 describe("Order Services", () => {
   let adminToken;
+  let csrfToken;
+  let agent;
   let userId;
   let lessonId;
   let cursusId;
 
-  // Avant chaque test, créer un utilisateur admin et récupérer son token
+  before(async () => {
+    await mongoose.connect(process.env.URL_MONGO, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  });
+
+  after(async () => {
+    await mongoose.disconnect();
+  });
+
   beforeEach(async () => {
-    // Créer un utilisateur de test (admin ou normal)
+    agent = request.agent(app);
+
+    const csrfRes = await agent.get("/csrf-token");
+    csrfToken = csrfRes.body.csrfToken;
+
     const user = new User({
       name: "Test User",
       email: "testuser@example.com",
@@ -28,7 +43,6 @@ describe("Order Services", () => {
     await user.save();
     userId = user._id;
 
-    // Créer une leçon de test
     const lesson = new Lesson({
       title: "Test Lesson",
       text: "text",
@@ -37,7 +51,6 @@ describe("Order Services", () => {
     await lesson.save();
     lessonId = lesson._id;
 
-    // Créer un cursus de test
     const cursus = new Cursus({
       title: "Test Cursus",
       price: 100,
@@ -45,38 +58,24 @@ describe("Order Services", () => {
     await cursus.save();
     cursusId = cursus._id;
 
-    // Authentifier l'utilisateur pour obtenir un token
-    const loginRes = await request(app)
-      .post("/user/authenticate")
+    const loginRes = await agent
+      .post("/users/authenticate")
+      .set("X-XSRF-TOKEN", csrfToken)
       .send({
         email: "testuser@example.com",
         password: "password123",
       });
 
-    adminToken = loginRes.body.token; // Récupérer le token de l'utilisateur
+    adminToken = loginRes.body.token;
   });
 
-  // Après chaque test, nettoyer la base de données
   afterEach(async () => {
-    await User.deleteMany({ email: /@example\.com$/ }); // Supprimer les utilisateurs test
-    await Lesson.deleteMany({ title: /Test/ }); // Supprimer les leçons de test
-    await Cursus.deleteMany({ title: /Test/ }); // Supprimer les cursus de test
+    await User.deleteMany({ email: /@example\.com$/ });
+    await Lesson.deleteMany({ title: /Test/ });
+    await Cursus.deleteMany({ title: /Test/ });
   });
 
-  // Se connecter à la base de données avant chaque test
-  before(async () => {
-    await mongoose.connect(process.env.URL_MONGO, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  });
-
-  // Se déconnecter de la base de données après chaque test
-  after(async () => {
-    await mongoose.disconnect();
-  });
-
-  describe("POST /order", () => {
+  describe("POST /orders", () => {
     it("should create a new order", async () => {
       const orderData = {
         items: [
@@ -85,17 +84,15 @@ describe("Order Services", () => {
         ],
       };
 
-      request(app)
-        .post("/order")
+      const res = await agent
+        .post("/orders")
         .set("Authorization", `Bearer ${adminToken}`)
-        .send(orderData)
-        .end((err, res) => {
-          if (err) return (err);
+        .set("X-XSRF-TOKEN", csrfToken)
+        .send(orderData);
 
-          expect(res.status).to.equal(201);
-          expect(res.body).to.have.property("totalPrice", 150); // Total price should be lesson price + cursus price
-          expect(res.body.items).to.have.lengthOf(2);
-        });
+      expect(res.status).to.equal(201);
+      expect(res.body).to.have.property("totalPrice", 150);
+      expect(res.body.items).to.have.lengthOf(2);
     });
 
     it("should return 400 if item type is invalid", async () => {
@@ -105,16 +102,14 @@ describe("Order Services", () => {
         ],
       };
 
-      request(app)
-        .post("/order")
+      const res = await agent
+        .post("/orders")
         .set("Authorization", `Bearer ${adminToken}`)
-        .send(orderData)
-        .end((err, res) => {
-          if (err) return (err);
+        .set("X-XSRF-TOKEN", csrfToken)
+        .send(orderData);
 
-          expect(res.status).to.equal(500);
-          expect(res.body).to.have.property("error", "Type d’élément invalide.");
-        });
+      expect(res.status).to.equal(500);
+      expect(res.body).to.have.property("error", "Type d’élément invalide.");
     });
 
     it("should return 404 if lesson or cursus is not found", async () => {
@@ -125,20 +120,18 @@ describe("Order Services", () => {
         ],
       };
 
-      request(app)
-        .post("/order")
+      const res = await agent
+        .post("/orders")
         .set("Authorization", `Bearer ${adminToken}`)
-        .send(orderData)
-        .end((err, res) => {
-          if (err) return (err);
+        .set("X-XSRF-TOKEN", csrfToken)
+        .send(orderData);
 
-          expect(res.status).to.equal(500);
-          expect(res.body).to.have.property("error", `Leçon introuvable avec l'ID: ${invalidLessonId}`);
-        });
+      expect(res.status).to.equal(500);
+      expect(res.body).to.have.property("error", `Leçon introuvable avec l'ID: ${invalidLessonId}`);
     });
   });
 
-  describe("GET /order/user/:userId", () => {
+  describe("GET /orders/user/:userId", () => {
     it("should return all orders by userId", async () => {
       const order = new Order({
         user: userId,
@@ -147,20 +140,18 @@ describe("Order Services", () => {
       });
       await order.save();
 
-      request(app)
-        .get(`/order/user/${userId}`)
+      const res = await agent
+        .get(`/orders/user/${userId}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .end((err, res) => {
-          if (err) return (err);
+        .set("X-XSRF-TOKEN", csrfToken);
 
-          expect(res.status).to.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body[0].totalPrice).to.equal(50);
-        });
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an("array");
+      expect(res.body[0].totalPrice).to.equal(50);
     });
   });
 
-  describe("GET /order/:orderId", () => {
+  describe("GET /orders/:orderId", () => {
     it("should return an order by ID", async () => {
       const order = new Order({
         user: userId,
@@ -169,33 +160,29 @@ describe("Order Services", () => {
       });
       await order.save();
 
-      request(app)
-        .get(`/order/${order._id}`)
+      const res = await agent
+        .get(`/orders/${order._id}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .end((err, res) => {
-          if (err) return (err);
+        .set("X-XSRF-TOKEN", csrfToken);
 
-          expect(res.status).to.equal(200);
-          expect(res.body).to.include({ totalPrice: 50 });
-        });
+      expect(res.status).to.equal(200);
+      expect(res.body).to.include({ totalPrice: 50 });
     });
 
     it("should return 404 if order not found", async () => {
       const invalidOrderId = new mongoose.Types.ObjectId();
 
-      request(app)
-        .get(`/order/${invalidOrderId}`)
+      const res = await agent
+        .get(`/orders/${invalidOrderId}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .end((err, res) => {
-          if (err) return (err);
+        .set("X-XSRF-TOKEN", csrfToken);
 
-          expect(res.status).to.equal(404);
-          expect(res.body).to.have.property("error", "Order not found");
-        });
+      expect(res.status).to.equal(404);
+      expect(res.body).to.have.property("error", "Order not found");
     });
   });
 
-  describe("PUT /order/:orderId", () => {
+  describe("PUT /orders/:orderId", () => {
     it("should update the status of an order", async () => {
       const order = new Order({
         user: userId,
@@ -204,31 +191,27 @@ describe("Order Services", () => {
       });
       await order.save();
 
-      request(app)
-        .put(`/order/${order._id}`)
+      const res = await agent
+        .put(`/orders/${order._id}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({ status: "shipped" })
-        .end((err, res) => {
-          if (err) return (err);
+        .set("X-XSRF-TOKEN", csrfToken)
+        .send({ status: "shipped" });
 
-          expect(res.status).to.equal(200);
-          expect(res.body.status).to.equal("shipped");
-        });
+      expect(res.status).to.equal(200);
+      expect(res.body.status).to.equal("shipped");
     });
 
     it("should return 404 if order to update not found", async () => {
       const invalidOrderId = new mongoose.Types.ObjectId();
 
-      request(app)
-        .put(`/order/${invalidOrderId}`)
+      const res = await agent
+        .put(`/orders/${invalidOrderId}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({ status: "shipped" })
-        .end((err, res) => {
-          if (err) return (err);
+        .set("X-XSRF-TOKEN", csrfToken)
+        .send({ status: "shipped" });
 
-          expect(res.status).to.equal(404);
-          expect(res.body).to.have.property("error", "Commande introuvable.");
-        });
+      expect(res.status).to.equal(404);
+      expect(res.body).to.have.property("error", "Commande introuvable.");
     });
   });
 });
