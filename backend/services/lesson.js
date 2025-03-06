@@ -8,7 +8,7 @@ const add = async (req, res) => {
   if (!title) {
     return res
       .status(400)
-      .json({ error: "Le champs title est requis." });
+      .json({ error: "Le champ title est requis." });
   }
 
   try {
