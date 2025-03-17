@@ -26,41 +26,34 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email déjà enregistré." });
     }
 
-    const newUser = new User({
+    let newUser = new User({
       name,
       email,
-      password,
-      isActive: false,
+      password
     });
-    await newUser.save();
+    newUser = await newUser.save();
+    console.log('newUser', newUser);
+  
 
-    const savedUser = await User.findOne({ email });
-
-    // Générer un token de confirmation
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d", // Expiration du token en 1 jour
+      expiresIn: "1d",
     });
 
-    // Envoyer un e-mail de confirmation
+    // Envoi d'e-mail de confirmation
     const transporter = nodemailer.createTransport({
       host: "localhost",
       port: 1025,
-      ignoreTLS: true, // Pas de chiffrement nécessaire pour un serveur local
+      ignoreTLS: true,
     });
 
-    // Lien de confirmation avec query string
     const confirmationUrl = `${process.env.FRONTEND_URL}/confirm?token=${token}`;
-    await transporter
-      .sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Confirmation de votre inscription",
-        html: `<p>Merci de vous être inscrit. Cliquez sur le lien suivant pour confirmer votre compte :</p>
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Confirmation de votre inscription",
+      html: `<p>Merci de vous être inscrit. Cliquez sur le lien suivant pour confirmer votre compte :</p>
              <a href="${confirmationUrl}">Confirmer mon compte</a>`,
-      })
-      .catch((err) => {
-        console.error("❌ Erreur d'envoi d'email:", err);
-      });
+    });
 
     res.status(201).json({
       message:
@@ -71,6 +64,7 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: "Erreur lors de l'inscription." });
   }
 };
+
 
 const confirmRegistration = async (req, res) => {
   try {
@@ -173,12 +167,19 @@ const getById = async (req, res, next) => {
 };
 
 const add = async (req, res, next) => {
+  if (!req.body) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const created_by = req.body.id;
+
   const temp = {
     name: req.body.name,
     firstname: req.body.firstname,
     email: req.body.email,
     password: req.body.password,
     role: req.body.role,
+    created_by : created_by,
   };
 
   try {

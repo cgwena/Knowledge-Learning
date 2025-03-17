@@ -1,6 +1,5 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
-
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const { Schema } = mongoose;
 
@@ -59,6 +58,8 @@ const UserSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    created_by: { type: Schema.Types.ObjectId, ref: "User" },
+    updated_by: { type: Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,
