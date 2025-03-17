@@ -4,6 +4,12 @@ import Lesson from "../models/lesson.js";
 const add = async (req, res) => {
   const { title, text, video_url, price } = req.body;
 
+  if (!req.decoded) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const created_by = req.decoded.id;
+
   // Validation des entrées
   if (!title) {
     return res
@@ -18,6 +24,7 @@ const add = async (req, res) => {
       text,
       video_url,
       price,
+      created_by,
     });
 
     return res.status(201).json(newLesson);
@@ -55,11 +62,16 @@ const getById = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
   const { title, price, text, video_url } = req.body;
+  if (!req.decoded) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const updated_by= req.decoded.id;
 
   try {
     const updatedLesson = await Lesson.findByIdAndUpdate(
       id,
-      { title, price, text, video_url },
+      { title, price, text, video_url, updated_by },
       { new: true } // Retourne le document mis à jour
     );
 

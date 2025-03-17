@@ -77,7 +77,7 @@ describe("User Services", () => {
 
     beforeEach(() => {
       findOneStub = sinon.stub(User, "findOne").resolves(null);
-      saveStub = sinon.stub(User.prototype, "save").resolves();
+      saveStub = sinon.stub(User.prototype, "save").resolves({ _id: 'some-id' });
       sendMailStub = sinon.stub().resolves();
       transporterStub = sinon.stub(nodemailer, "createTransport").returns({
         sendMail: sendMailStub,
@@ -114,6 +114,8 @@ describe("User Services", () => {
         html: sinon.match(/http:\/\/localhost:8080\/confirm\?token=\S+/),
       }));
     });
+
+
 
     it("should return 400 if email already exists", async () => {
       findOneStub.resolves({ email: "testuser@example.com" });
@@ -283,7 +285,7 @@ describe("User Services", () => {
         .set("Authorization", `Bearer ${adminToken}`)
         .set("X-XSRF-TOKEN", csrfToken)
         .send(userData);
-
+      
       expect(res.status).to.equal(201);
       expect(res.body).to.have.property("_id");
       expect(res.body.name).to.equal(userData.name);

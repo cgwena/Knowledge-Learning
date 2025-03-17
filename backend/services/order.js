@@ -6,6 +6,12 @@ import mongoose from 'mongoose';
 const createOrder = async (req, res) => {
   const { items } = req.body;
 
+  if (!req.decoded) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const created_by = req.decoded.id;
+
   try {
     // Validation des items
     let totalPrice = 0;
@@ -34,6 +40,7 @@ const createOrder = async (req, res) => {
       user: req.decoded.id,
       items: validatedItems,
       totalPrice,
+      created_by,
     });
 
     return res.status(201).json(order);
@@ -82,11 +89,16 @@ const updateOrderStatus = async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
 
+  if (!req.decoded) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const updated_by= req.decoded.id;
+
   try {
     const order = await Order.findByIdAndUpdate(
       orderId,
-      { status },
-      { new: true }
+      { status, updated_by },
     );
 
     if (!order) {

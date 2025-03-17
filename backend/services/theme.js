@@ -4,9 +4,14 @@ import Cursus from '../models/cursus.js';
 // Ajouter un nouveau thème
 const add = async (req, res) => {
   const { title, cursus } = req.body;
+  if (!req.decoded) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const created_by = req.decoded.id;
 
   try {
-    const theme = await Theme.create({ title, cursus });
+    const theme = await Theme.create({ title, cursus, created_by });
     return res.status(201).json(theme);
   } catch (error) {
     return res.status(501).json(error);
@@ -56,9 +61,14 @@ const getById = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
   const { title, cursus } = req.body;
+  if (!req.decoded) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const updated_by= req.decoded.id;
 
   try {
-    const updateData = {};
+    const updateData = {updated_by};
     if (title) updateData.title = title;
     if (cursus && cursus.length > 0) {
       updateData.$addToSet = { cursus: { $each: cursus } };

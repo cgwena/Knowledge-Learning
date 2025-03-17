@@ -75,7 +75,7 @@ router.post('/', middleware.checkJWT, orderService.createOrder);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.get('/user/:userId', orderService.getOrdersByUser);
+router.get('/user/:userId', middleware.checkJWT, orderService.getOrdersByUser);
 
 /**
  * @swagger
@@ -102,7 +102,7 @@ router.get('/user/:userId', orderService.getOrdersByUser);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.get('/:orderId', orderService.getOrderById);
+router.get('/:orderId', middleware.checkJWT, orderService.getOrderById);
 
 /**
  * @swagger
@@ -139,6 +139,6 @@ router.get('/:orderId', orderService.getOrderById);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.put('/:orderId', orderService.updateOrderStatus);
+router.put('/:orderId', middleware.checkJWT, orderService.updateOrderStatus);
 
 export default router;

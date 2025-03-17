@@ -97,9 +97,7 @@ describe("Order Services", () => {
 
     it("should return 400 if item type is invalid", async () => {
       const orderData = {
-        items: [
-          { type: "invalidType", itemId: lessonId },
-        ],
+        items: [{ type: "invalidType", itemId: lessonId }],
       };
 
       const res = await agent
@@ -115,9 +113,7 @@ describe("Order Services", () => {
     it("should return 404 if lesson or cursus is not found", async () => {
       const invalidLessonId = new mongoose.Types.ObjectId();
       const orderData = {
-        items: [
-          { type: "lesson", itemId: invalidLessonId },
-        ],
+        items: [{ type: "lesson", itemId: invalidLessonId }],
       };
 
       const res = await agent
@@ -127,7 +123,10 @@ describe("Order Services", () => {
         .send(orderData);
 
       expect(res.status).to.equal(500);
-      expect(res.body).to.have.property("error", `Leçon introuvable avec l'ID: ${invalidLessonId}`);
+      expect(res.body).to.have.property(
+        "error",
+        `Leçon introuvable avec l'ID: ${invalidLessonId}`
+      );
     });
   });
 
@@ -191,14 +190,19 @@ describe("Order Services", () => {
       });
       await order.save();
 
-      const res = await agent
+      await agent
         .put(`/orders/${order._id}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .set("X-XSRF-TOKEN", csrfToken)
-        .send({ status: "shipped" });
+        .send({ status: "completed" });
+
+      const res = await agent
+        .get(`/orders/${order._id}`)
+        .set("Authorization", `Bearer ${adminToken}`)
+        .set("X-XSRF-TOKEN", csrfToken);
 
       expect(res.status).to.equal(200);
-      expect(res.body.status).to.equal("shipped");
+      expect(res.body.status).to.equal("completed");
     });
 
     it("should return 404 if order to update not found", async () => {

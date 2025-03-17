@@ -3,7 +3,13 @@ import Lesson from "../models/lesson.js";
 
 // Ajouter un cursus
 const add = async (req, res) => {
-  const { title, price, lessons } = req.body;
+  const { title, price, lessons} = req.body;
+
+  if (!req.decoded) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const created_by = req.decoded.id;
 
   // Validation des entrées
   if (!title || !price) {
@@ -15,7 +21,8 @@ const add = async (req, res) => {
     const newCursus = await Cursus.create({
       title,
       price,
-      lessons, // Attache les leçons via leurs ObjectId
+      lessons, 
+      created_by,
     });
 
     return res.status(201).json(newCursus);
@@ -54,12 +61,18 @@ const update = async (req, res) => {
   const { id } = req.params;
   const { title, price, lessons } = req.body;
 
+  if (!req.decoded) {
+    return res.status(401).json({ error: "Utilisateur non authentifié." });
+  }
+
+  const updated_by= req.decoded.id;
+
   try {
     const updatedCursus = await Cursus.findByIdAndUpdate(
       id,
-      { title, price, lessons }, // Met à jour le titre, le prix et les leçons
-      { new: true } // Retourne le document mis à jour
-    ).populate("lessons"); // Recharge les leçons associées
+      { title, price, lessons, updated_by }, 
+      { new: true } //
+    ).populate("lessons"); 
 
     if (!updatedCursus) {
       return res.status(404).json({ error: "Cursus introuvable." });

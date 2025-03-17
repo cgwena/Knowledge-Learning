@@ -92,7 +92,7 @@ router.get('/:id', middleware.checkJWT, service.getById);
  *       500:
  *         description: Erreur interne du serveur
  */
-router.post('/add', service.add);
+router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
 
 /**
  * @swagger
