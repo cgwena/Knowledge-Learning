@@ -39,7 +39,7 @@
     },
     async created() {
       if (this.isAuthenticated) {
-          const response = await getUserInfo(); // Appel pour récupérer les données utilisateur
+          const response = await getUserInfo();
           this.userCertifiedCursus = response.cursus.filter((cursus) => cursus.isCompleted === true)
       }
           

@@ -7,11 +7,11 @@ import "vue3-toastify/dist/index.css";
 
 const app = createApp(App);
 
-app.use(store); // Utilisation de Vuex
-app.use(router); // Utilisation de Vue Router
+app.use(store);
+app.use(router);
 app.use(Vue3Toastify, {
-    autoClose: 3000, // Durée de la notification en millisecondes
-    position: "bottom-right", // Position du toaster
+    autoClose: 3000,
+    position: "bottom-right",
   });
 
 app.mount('#app');

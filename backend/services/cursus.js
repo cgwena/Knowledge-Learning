@@ -1,7 +1,7 @@
 import Cursus from "../models/cursus.js";
 import Lesson from "../models/lesson.js";
 
-// Ajouter un cursus
+// Add a cursus
 const add = async (req, res) => {
   const { title, price, lessons} = req.body;
 
@@ -11,13 +11,13 @@ const add = async (req, res) => {
 
   const created_by = req.decoded.id;
 
-  // Validation des entrées
+  // Entry validation
   if (!title || !price) {
     return res.status(400).json({ error: "Les champs title et price sont requis." });
   }
 
   try {
-    // Créer un nouveau cursus
+    // Create a new cursus
     const newCursus = await Cursus.create({
       title,
       price,
@@ -31,7 +31,7 @@ const add = async (req, res) => {
   }
 };
 
-// Obtenir tous les cursus
+// Get all cursus
 const getAll = async (req, res) => {
   try {
     const cursusList = await Cursus.find().populate("lessons"); // Charge les leçons associées
@@ -41,7 +41,7 @@ const getAll = async (req, res) => {
   }
 };
 
-// Obtenir un cursus par ID
+// Get a cursus by id
 const getById = async (req, res) => {
   const { id } = req.params;
 
@@ -56,7 +56,7 @@ const getById = async (req, res) => {
   }
 };
 
-// Mettre à jour un cursus
+// Update a cursus
 const update = async (req, res) => {
   const { id } = req.params;
   const { title, price, lessons } = req.body;
@@ -84,7 +84,7 @@ const update = async (req, res) => {
   }
 };
 
-// Supprimer un cursus
+// Delete a cursus
 const deleteCursus = async (req, res) => {
   const { id } = req.params;
 

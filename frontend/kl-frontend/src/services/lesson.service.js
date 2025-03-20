@@ -3,10 +3,10 @@ import axiosInstance from "../services/axios";
 export const getThemes = async () => {
   try {
     const response = await axiosInstance.get('http://localhost:3000/themes');
-    return response; // Retourne les données des thèmes
+    return response; 
   } catch (error) {
     console.error("Erreur lors de la récupération des thèmes", error);
-    throw error; // Lance l'erreur pour qu'elle soit gérée par le composant
+    throw error;
   }
 };
 
@@ -14,13 +14,13 @@ export const fetchThemeById = async(id) => {
   const token = localStorage.getItem("token");
   const response = await axiosInstance.get(`http://localhost:3000/themes/${id}`,{
     headers: {
-        Authorization: `Bearer ${token}`, // Envoyer le token dans les en-têtes
+        Authorization: `Bearer ${token}`,
       },
   });
   return response.data
 }
 
-// Ajouter un thème
+// Add a theme
 export const addTheme = async (themeData) => {
   const token = localStorage.getItem("token");
   try {
@@ -36,7 +36,7 @@ export const addTheme = async (themeData) => {
   }
 };
 
-// Mettre à jour un thème
+// Update a theme
 export const updateTheme = async (id, themeData) => {
   const token = localStorage.getItem("token");
   try {
@@ -52,7 +52,7 @@ export const updateTheme = async (id, themeData) => {
   }
 };
 
-// Supprimer un thème
+// Delete a theme
 export const deleteTheme = async (id) => {
   const token = localStorage.getItem("token");
   try {
@@ -78,7 +78,7 @@ export const fetchCursusById = async(id) => {
   return response
 }
 
-// Ajouter un cursus
+// Add a cursus
 export const addCursus = async (cursusData) => {
   const token = localStorage.getItem("token");
   try {
@@ -94,7 +94,7 @@ export const addCursus = async (cursusData) => {
   }
 };
 
-// Mettre à jour un cursus
+// Update a cursus
 export const updateCursus = async (id, cursusData) => {
   const token = localStorage.getItem("token");
   try {
@@ -110,7 +110,7 @@ export const updateCursus = async (id, cursusData) => {
   }
 };
 
-// Supprimer un cursus
+// Delete a cursus
 export const deleteCursus = async (id) => {
   const token = localStorage.getItem("token");
   try {
@@ -126,6 +126,7 @@ export const deleteCursus = async (id) => {
   }
 };
 
+// Get a lesson by ID
 export const fetchLessonById = async(id) => {
   const token = localStorage.getItem("token");
   const response = await axiosInstance.get(`http://localhost:3000/lessons/${id}`,{
@@ -136,7 +137,7 @@ export const fetchLessonById = async(id) => {
   return response
 }
 
-// Ajouter une leçon
+// Add a lesson
 export const addLesson = async (lessonData) => {
   const token = localStorage.getItem("token");
   try {
@@ -152,7 +153,7 @@ export const addLesson = async (lessonData) => {
   }
 };
 
-// Mettre à jour une leçon
+// Update a lesson
 export const updateLesson = async (id, lessonData) => {
   const token = localStorage.getItem("token");
   try {
@@ -168,7 +169,7 @@ export const updateLesson = async (id, lessonData) => {
   }
 };
 
-// Supprimer une leçon
+// Delete a lesson
 export const deleteLesson = async (id) => {
   const token = localStorage.getItem("token");
   try {

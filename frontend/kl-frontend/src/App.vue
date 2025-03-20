@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     
-    <router-view></router-view> <!-- Affiche le composant correspondant à la route actuelle -->
+    <router-view></router-view> 
   </div>
 </template>
 
@@ -26,7 +26,6 @@ export default {
 
 * {
   box-sizing: border-box;
-  /* border: 1px solid red; */
 }
 
 #app {

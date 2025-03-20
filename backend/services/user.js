@@ -39,7 +39,7 @@ const registerUser = async (req, res) => {
       expiresIn: "1d",
     });
 
-    // Envoi d'e-mail de confirmation
+    // Send confirmation email
     const transporter = nodemailer.createTransport({
       host: "localhost",
       port: 1025,
@@ -68,7 +68,7 @@ const registerUser = async (req, res) => {
 
 const confirmRegistration = async (req, res) => {
   try {
-    // Récupérer le token depuis la query string
+    // Get token from URL
     const { token } = req.params;
 
     if (!token) {
@@ -77,7 +77,7 @@ const confirmRegistration = async (req, res) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Activer l'utilisateur
+    // Activate user account
     const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(404).json({ message: "Utilisateur non trouvé." });
@@ -104,7 +104,7 @@ const authenticate = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    // Recherche de l'utilisateur
+    // Search for user in database
     let user = await User.findOne(
       { email: email },
       "-__v -createdAt -updatedAt"
@@ -114,24 +114,24 @@ const authenticate = async (req, res, next) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Vérification du mot de passe
+    // Password validation
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(403).json({ error: "Invalid credentials" });
     }
 
-    // Suppression du mot de passe de l'objet utilisateur
+    // Delete password from user object
     const { _id, email: userEmail, role } = user; // Sélectionner les champs nécessaires
     const payload = { id: _id, email: userEmail, role: role };
 
-    // Création du token JWT
+    // Create token
     const expireIn = 24 * 60 * 60; // 24 heures
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: expireIn });
 
     // Envoi du token dans les headers
     res.header("Authorization", "Bearer " + token);
 
-    // Réponse de succès
+    // Success response
     return res
       .status(200)
       .json({ message: "Authenticate_succeed", token, user });
@@ -141,7 +141,7 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-// Obtenir tous les users
+// Get all users
 const getAll = async (req, res) => {
   try {
     const UserList = await User.find();

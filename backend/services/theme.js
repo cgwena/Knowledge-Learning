@@ -1,7 +1,7 @@
 import Theme from '../models/theme.js';
 import Cursus from '../models/cursus.js';
 
-// Ajouter un nouveau thème
+// Add a new theme
 const add = async (req, res) => {
   const { title, cursus } = req.body;
   if (!req.decoded) {
@@ -18,7 +18,7 @@ const add = async (req, res) => {
   }
 };
 
-// Obtenir tous les thèmes avec leurs cursus et leçons
+// Get all themes with associated cursus and lessons
 const getAll = async (req, res) => {
   try {
     const themeList = await Theme.find()
@@ -35,7 +35,7 @@ const getAll = async (req, res) => {
   }
 };
 
-// Obtenir un thème par ID avec ses cursus et leçons
+// Get a theme by id with associated cursus and lessons
 const getById = async (req, res) => {
   const { id } = req.params;
 
@@ -57,7 +57,7 @@ const getById = async (req, res) => {
   }
 };
 
-// Mettre à jour un thème et ajouter des cursus
+// Update a theme and add cursus
 const update = async (req, res) => {
   const { id } = req.params;
   const { title, cursus } = req.body;
@@ -90,7 +90,7 @@ const update = async (req, res) => {
   }
 };
 
-// Supprimer un thème
+// Delete a theme
 const deleteTheme = async (req, res) => {
   const { id } = req.params;
 
@@ -107,7 +107,7 @@ const deleteTheme = async (req, res) => {
   }
 };
 
-// Ajouter un cursus à un thème
+// Add a cursus to a theme
 const addCursusToTheme = async (req, res) => {
   const { themeId, cursusId } = req.body;
 
@@ -139,6 +139,6 @@ export default {
   getAll,
   getById,
   update,
-  delete: deleteTheme, // Avoid using 'delete' as a reserved word
+  delete: deleteTheme,
   addCursusToTheme,
 };

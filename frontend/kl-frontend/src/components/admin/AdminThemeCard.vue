@@ -26,10 +26,10 @@
       />
     </div>
 
-    <!-- Bouton pour ajouter un cursus -->
+    <!-- Button to add a new cursus -->
     <button @click="openAddCursusForm">Ajouter un cursus</button>
 
-    <!-- Formulaire pour ajouter un cursus -->
+    <!-- Form to add a new cursus -->
     <div v-if="isAddingCursus" class="add-cursus-form">
       <form @submit.prevent="submitNewCursus">
         <input
@@ -50,14 +50,14 @@
 </template>
 
 <script>
-import AdminCursusCard from './AdminCursusCard.vue';
+import AdminCursusCard from "./AdminCursusCard.vue";
 
 export default {
   props: {
-    theme: Object
+    theme: Object,
   },
   components: {
-    AdminCursusCard
+    AdminCursusCard,
   },
   data() {
     return {
@@ -66,8 +66,8 @@ export default {
       editedTheme: { ...this.theme },
       newCursus: {
         title: "",
-        price: 0
-      }
+        price: 0,
+      },
     };
   },
   methods: {
@@ -79,26 +79,26 @@ export default {
       this.editedTheme = { ...this.theme };
     },
     saveTheme() {
-      this.$emit('editTheme', this.editedTheme);
+      this.$emit("editTheme", this.editedTheme);
       this.isEditing = false;
     },
     deleteTheme(themeId) {
-      this.$emit('deleteTheme', themeId);
+      this.$emit("deleteTheme", themeId);
     },
     editCursus(cursus) {
-      this.$emit('editCursus', cursus);
+      this.$emit("editCursus", cursus);
     },
     deleteCursus(cursusId) {
-      this.$emit('deleteCursus', cursusId);
+      this.$emit("deleteCursus", cursusId);
     },
     editLesson(lesson) {
-      this.$emit('editLesson', lesson);
+      this.$emit("editLesson", lesson);
     },
     deleteLesson(lesson) {
-      this.$emit('deleteLesson', lesson)
+      this.$emit("deleteLesson", lesson);
     },
     addNewLesson(lesson) {
-      this.$emit('addNewLesson', lesson)
+      this.$emit("addNewLesson", lesson);
     },
     openAddCursusForm() {
       this.isAddingCursus = true;
@@ -116,20 +116,19 @@ export default {
 
       const newCursusData = {
         ...this.newCursus,
-        themeId: this.theme._id
+        themeId: this.theme._id,
       };
 
-      // Émettre un événement pour le parent avec les données du nouveau cursus
-      this.$emit('addNewCursus', newCursusData);
+      // Emit an event to add the new cursus
+      this.$emit("addNewCursus", newCursusData);
 
-      // Réinitialiser le formulaire
+      // Reinitialize the form
       this.isAddingCursus = false;
       this.newCursus = { title: "", price: 0 };
-    }
-  }
+    },
+  },
 };
 </script>
-
 
 <style scoped>
 .theme-card {

@@ -8,26 +8,26 @@ import middleware from '../middlewares/private.js';
  * @swagger
  * tags:
  *   name: Lessons
- *   description: API pour gérer les leçons protégées par authentification et rôle administrateur
- */
+ *   description: API to manage lessons. 
+ *  */
 
 /**
  * @swagger
  * /lesson/:
  *   get:
- *     summary: Récupérer toutes les leçons
- *     description: Retourne la liste de toutes les leçons. Nécessite une authentification via JWT.
+ *     summary: Get all lessons
+ *     description: Return all lessons. Requires authentication via JWT.
  *     security:
  *       - BearerAuth: []
  *     tags:
  *       - Lessons
  *     responses:
  *       200:
- *         description: Liste des leçons retournée avec succès
+ *         description: Lessons list found successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.get('/', middleware.checkJWT, service.getAll);
 
@@ -35,8 +35,8 @@ router.get('/', middleware.checkJWT, service.getAll);
  * @swagger
  * /lesson/{id}:
  *   get:
- *     summary: Récupérer une leçon par ID
- *     description: Retourne une leçon spécifique. Nécessite une authentification via JWT.
+ *     summary: Get a specific lesson by ID
+ *     description: return a specific lesson by ID. Requires authentication via JWT.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -50,13 +50,13 @@ router.get('/', middleware.checkJWT, service.getAll);
  *         description: ID de la leçon à récupérer
  *     responses:
  *       200:
- *         description: Leçon trouvée avec succès
+ *         description: Lesson found successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       404:
- *         description: Leçon non trouvée
+ *         description: Lesson not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.get('/:id', middleware.checkJWT, service.getById);
 
@@ -64,8 +64,8 @@ router.get('/:id', middleware.checkJWT, service.getById);
  * @swagger
  * /lesson/add:
  *   post:
- *     summary: Ajouter une nouvelle leçon
- *     description: Crée une nouvelle leçon. Nécessite une authentification et des droits administrateurs.
+ *     summary: Add a new lesson
+ *     description: Create a new lesson. Requires authentication via JWT and admin rights.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -82,15 +82,15 @@ router.get('/:id', middleware.checkJWT, service.getById);
  *                 example: "Nouvelle leçon"
  *     responses:
  *       201:
- *         description: Leçon créée avec succès
+ *         description: Lesson created successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Droits administrateurs requis
+ *         description: Unauthorized - Admin rights required
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
 
@@ -98,8 +98,8 @@ router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
  * @swagger
  * /lesson/{id}:
  *   put:
- *     summary: Mettre à jour une leçon
- *     description: Met à jour une leçon existante. Nécessite une authentification et des droits administrateurs.
+ *     summary: Update a lesson
+ *     description: Update an existing lesson. Requires authentication via JWT and admin rights.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -110,7 +110,7 @@ router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la leçon à mettre à jour
+ *         description: Lesson ID to update
  *     requestBody:
  *       required: true
  *       content:
@@ -123,17 +123,17 @@ router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
  *                 example: "Leçon mise à jour"
  *     responses:
  *       200:
- *         description: Leçon mise à jour avec succès
+ *         description: Lesson updated successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Droits administrateurs requis
+ *         description: Unauthorized - Admin rights required
  *       404:
- *         description: Leçon non trouvée
+ *         description: Lesson not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.put('/:id', middleware.checkJWT, middleware.checkAdmin, service.update);
 
@@ -141,8 +141,8 @@ router.put('/:id', middleware.checkJWT, middleware.checkAdmin, service.update);
  * @swagger
  * /lesson/{id}:
  *   delete:
- *     summary: Supprimer une leçon
- *     description: Supprime une leçon existante. Nécessite une authentification et des droits administrateurs.
+ *     summary: Delete a lesson
+ *     description: Delete an existing lesson. Requires authentication via JWT and admin rights.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -153,18 +153,18 @@ router.put('/:id', middleware.checkJWT, middleware.checkAdmin, service.update);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la leçon à supprimer
+ *         description: Lesson ID to delete
  *     responses:
  *       200:
- *         description: Leçon supprimée avec succès
+ *         description: Lesson deleted successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Droits administrateurs requis
+ *         description: Unauthorized - Admin rights required
  *       404:
- *         description: Leçon non trouvée
+ *         description: Lesson not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.delete('/:id', middleware.checkJWT, middleware.checkAdmin, service.delete);
 

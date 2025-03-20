@@ -1,17 +1,17 @@
 import axios from "axios";
 import store from "@/store";
 
-let csrfToken = null; // Toujours récupérer un token à jour
+let csrfToken = null;
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:3000",
   headers: {
     "Content-Type": "application/json", 
   },
-  withCredentials: true, // Assurez-vous que les cookies sont envoyés
+  withCredentials: true,
 });
 
-// Récupérer le token CSRF et l'ajouter aux headers
+// Get CSRF token and add it to the headers
 const getCsrfToken = async () => {
   try {
     const response = await axiosInstance.get("/csrf-token");
@@ -25,10 +25,8 @@ const getCsrfToken = async () => {
   }
 };
 
-// Appeler `getCsrfToken()` en arrière-plan
 getCsrfToken();
 
-// Intercepteur de requêtes
 axiosInstance.interceptors.request.use(
   async (config) => {
     const csrfToken = document.cookie
@@ -52,7 +50,6 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Intercepteur de réponses
 axiosInstance.interceptors.response.use(
   (response) => response.data,
   (error) => {
@@ -61,7 +58,6 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// Fonctions utilitaires pour requêtes HTTP
 const get = async (url, params = {}) => axiosInstance.get(url, { params });
 const post = async (url, data) => axiosInstance.post(url, data);
 const put = async (url, data) => axiosInstance.put(url, data);

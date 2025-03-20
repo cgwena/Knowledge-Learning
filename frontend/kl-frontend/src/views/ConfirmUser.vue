@@ -20,7 +20,6 @@ export default {
     Navbar,
   },
   async created() {
-    // Récupère le token depuis la query string
     const token = this.$route.query.token;
     if (!token) {
       this.message = "Token manquant. Veuillez vérifier le lien.";

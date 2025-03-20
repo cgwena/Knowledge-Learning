@@ -13,7 +13,7 @@ const createOrder = async (req, res) => {
   const created_by = req.decoded.id;
 
   try {
-    // Validation des items
+    // Items validation
     let totalPrice = 0;
     const validatedItems = await Promise.all(
       items.map(async (item) => {
@@ -35,7 +35,7 @@ const createOrder = async (req, res) => {
       })
     );
 
-    // Création de la commande
+    // Create the order
     const order = await Order.create({
       user: req.decoded.id,
       items: validatedItems,

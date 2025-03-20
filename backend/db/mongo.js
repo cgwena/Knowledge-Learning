@@ -2,10 +2,10 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import path from 'path';
 
-// Utilisation de import.meta.url pour obtenir le répertoire actuel
+// Use the URL constructor to get the current file path
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-// Charger les variables d'environnement depuis le fichier .env dans le dossier 'env'
+// Uploading the environment variables
 dotenv.config({ path: path.resolve(__dirname, '../env/.env') });
 
 const clientOptions = {
