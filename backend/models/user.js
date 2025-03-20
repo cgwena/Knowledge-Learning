@@ -25,7 +25,7 @@ const UserSchema = new Schema(
       type: String,
       trim: true,
     },
-    // Cursus suivis par l'utilisateur
+    // Cursus bought or followed by the user
     cursus: [
       {
         id: { type: Schema.Types.ObjectId, ref: "Cursus", required: true },
@@ -40,7 +40,7 @@ const UserSchema = new Schema(
       },
     ],
 
-    // Leçons achetées ou suivies par l'utilisateur
+    // Lessons bought or followed by the user
     lessons: [
       {
         id: { type: Schema.Types.ObjectId, ref: "Lesson", required: true },
@@ -66,7 +66,7 @@ const UserSchema = new Schema(
   }
 );
 
-// Middleware pour hacher le mot de passe avant de sauvegarder
+// Middlewre to hash the password before saving the user
 UserSchema.pre("save", function (next) {
   if (!this.isModified("password")) {
     return next();
@@ -76,7 +76,7 @@ UserSchema.pre("save", function (next) {
   next();
 });
 
-// Méthode pour mettre à jour l'état d'un cursus
+// Method to update the status of the curriculum
 UserSchema.methods.updateCurriculumStatus = function () {
   this.curriculums.forEach((curriculum) => {
     curriculum.isCompleted = curriculum.lessons.every(
@@ -95,7 +95,7 @@ UserSchema.methods.completeLesson = function (lessonId) {
       cursusUpdated = true;
     }
 
-    // Vérifie si toutes les leçons sont complètes pour mettre à jour `isCompleted` du cursus
+    // Verify if all lessons are completed
     cursus.isCompleted = cursus.lessons.every((l) => l.isCompleted);
   });
 

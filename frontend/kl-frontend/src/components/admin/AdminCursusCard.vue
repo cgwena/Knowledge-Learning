@@ -21,10 +21,10 @@
       />
     </div>
 
-    <!-- Bouton pour ajouter un cursus -->
+    <!-- Button to add a new lesson -->
     <button @click="openAddLessonForm">Ajouter une leçon</button>
 
-    <!-- Formulaire pour ajouter un cursus -->
+    <!-- Form to add a new lesson -->
     <div v-if="isAddingLesson" class="add-lesson-form">
       <form @submit.prevent="submitNewLesson">
         <input
@@ -35,7 +35,7 @@
         <input
           v-model.number="newLesson.price"
           type="number"
-          placeholder="Prix du cursus"
+          placeholder="Prix de la leçon"
         />
         <input
           v-model="newLesson.text"
@@ -102,7 +102,7 @@ export default {
     },
     submitNewLesson() {
       if (!this.newLesson.title || this.newLesson.price <= 0 || !this.newLesson.text) {
-        alert("Veuillez renseigner un titre, un prix et un textevalide pour la leçon.");
+        alert("Please fill in all fields");
         return;
       }
 
@@ -111,10 +111,10 @@ export default {
         cursusId: this.cursus._id
       };
 
-      // Émettre un événement pour le parent avec les données du nouveau cursus
+      // Emit the event to add the new lesson
       this.$emit('addNewLesson', newLessonData);
 
-      // Réinitialiser le formulaire
+      // Reinitialize the form
       this.isAddingLesson = false;
       this.newLesson = { title: "", price: 0, text: "" };
     }
@@ -136,11 +136,11 @@ export default {
 }
 
 input {
-  width: 100%; /* Utilise toute la largeur du conteneur */
-  max-width: 500px; /* Limite la largeur maximale */
-  padding: 10px; /* Ajoute un padding pour agrandir la zone cliquable */
-  font-size: 1rem; /* Augmente la taille du texte */
-  box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+  width: 100%;
+  max-width: 500px;
+  padding: 10px; 
+  font-size: 1rem; 
+  box-sizing: border-box;
 }
 
 button {

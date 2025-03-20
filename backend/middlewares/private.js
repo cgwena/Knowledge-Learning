@@ -6,7 +6,7 @@ const checkJWT = (req, res, next) => {
   try {
     let token = req.headers['x-access-token'] || req.headers['authorization'];
 
-    // Vérification du format "Bearer"
+    // Verification of the format of the token
     if (token && token.startsWith('Bearer ')) {
       token = token.slice(7, token.length); // Retire le "Bearer " du token
     }
@@ -15,7 +15,7 @@ const checkJWT = (req, res, next) => {
       return res.status(401).json({ message: 'Token required' });
     }
 
-    // Vérification et décodage du token
+    // Verification and decoding of the token
     jwt.verify(token, JWT_SECRET, (err, decoded) => {
       if (err) {
         return res.status(401).json({
@@ -24,7 +24,6 @@ const checkJWT = (req, res, next) => {
         });
       }
 
-      // Log de débogage : vérifiez ce que contient le "decoded"
       if (decoded) {
         req.decoded = decoded;
     
@@ -46,7 +45,7 @@ const checkJWT = (req, res, next) => {
 };
 
 const checkAdmin = (req, res, next) => {
-  // Vérifie si l'utilisateur a un rôle 'admin' dans le token décodé
+  // Verification of the role of the user
   if (req.decoded && req.decoded.role === 'admin') {
     return next(); // Si l'utilisateur est un admin, passe à la route suivante
   } else {

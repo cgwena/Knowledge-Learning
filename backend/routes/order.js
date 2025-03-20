@@ -8,15 +8,15 @@ import middleware from '../middlewares/private.js';
  * @swagger
  * tags:
  *   name: Orders
- *   description: API pour gérer les commandes
+ *   description: API to manage orders.
  */
 
 /**
  * @swagger
  * /orders/:
  *   post:
- *     summary: Créer une nouvelle commande
- *     description: Crée une nouvelle commande pour l'utilisateur authentifié.
+ *     summary: Create a new order
+ *     description: create a new order for the authenticated user.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -40,13 +40,13 @@ import middleware from '../middlewares/private.js';
  *                 example: [{ "productId": "123", "quantity": 2 }]
  *     responses:
  *       201:
- *         description: Commande créée avec succès
+ *         description: Order created successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.post('/', middleware.checkJWT, orderService.createOrder);
 
@@ -54,8 +54,8 @@ router.post('/', middleware.checkJWT, orderService.createOrder);
  * @swagger
  * /orders/user/{userId}:
  *   get:
- *     summary: Récupérer les commandes d'un utilisateur
- *     description: Retourne toutes les commandes passées par un utilisateur spécifique.
+ *     summary: Get all orders by user
+ *     description: Return all orders for a specific user.
  *     tags:
  *       - Orders
  *     parameters:
@@ -64,16 +64,16 @@ router.post('/', middleware.checkJWT, orderService.createOrder);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de l'utilisateur dont on veut récupérer les commandes
+ *         description: User ID to retrieve orders
  *     responses:
  *       200:
- *         description: Liste des commandes de l'utilisateur
+ *         description: Orders found successfully
  *       400:
- *         description: ID utilisateur invalide
+ *         description: Invalid user ID
  *       404:
- *         description: Aucune commande trouvée
+ *         description: No orders found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.get('/user/:userId', middleware.checkJWT, orderService.getOrdersByUser);
 
@@ -81,8 +81,8 @@ router.get('/user/:userId', middleware.checkJWT, orderService.getOrdersByUser);
  * @swagger
  * /orders/{orderId}:
  *   get:
- *     summary: Récupérer une commande par ID
- *     description: Retourne une commande spécifique.
+ *     summary: Get a specific order by ID
+ *     description: Return a specific order by ID.
  *     tags:
  *       - Orders
  *     parameters:
@@ -91,16 +91,16 @@ router.get('/user/:userId', middleware.checkJWT, orderService.getOrdersByUser);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la commande à récupérer
+ *         description: Order ID to retrieve
  *     responses:
  *       200:
- *         description: Commande trouvée avec succès
+ *         description: Order found successfully
  *       400:
- *         description: ID commande invalide
+ *         description: Invalid order ID
  *       404:
- *         description: Commande non trouvée
+ *         description: Order not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.get('/:orderId', middleware.checkJWT, orderService.getOrderById);
 
@@ -108,8 +108,8 @@ router.get('/:orderId', middleware.checkJWT, orderService.getOrderById);
  * @swagger
  * /orders/{orderId}:
  *   put:
- *     summary: Mettre à jour le statut d'une commande
- *     description: Met à jour le statut d'une commande existante.
+ *     summary: Update an existing order status
+ *     description: Update an existing order status.
  *     tags:
  *       - Orders
  *     parameters:
@@ -118,7 +118,7 @@ router.get('/:orderId', middleware.checkJWT, orderService.getOrderById);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la commande à mettre à jour
+ *         description: Order ID to update
  *     requestBody:
  *       required: true
  *       content:
@@ -128,16 +128,16 @@ router.get('/:orderId', middleware.checkJWT, orderService.getOrderById);
  *             properties:
  *               status:
  *                 type: string
- *                 example: "shipped"
+ *                 example: "completed"
  *     responses:
  *       200:
- *         description: Commande mise à jour avec succès
+ *         description: Order status updated successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       404:
- *         description: Commande non trouvée
+ *         description: Order not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.put('/:orderId', middleware.checkJWT, orderService.updateOrderStatus);
 

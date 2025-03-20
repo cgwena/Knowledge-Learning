@@ -1,73 +1,73 @@
-import express from 'express';
+import express from "express";
 const router = express.Router();
 
-import service from '../services/user.js';
-import middleware from '../middlewares/private.js';
+import service from "../services/user.js";
+import middleware from "../middlewares/private.js";
 
 /**
  * @swagger
  * tags:
- *   name: Utilisateurs
- *   description: API pour gérer les utilisateurs et l'authentification
+ *   name: Users
+ *   description: API to manage users.
  */
 
 /**
  * @swagger
  * /users/:
  *   get:
- *     summary: Récupérer tous les utilisateurs
- *     description: Retourne la liste de tous les utilisateurs disponibles. Nécessite une authentification.
+ *     summary: Get all users
+ *     description: Return all users. Requires authentication
  *     security:
  *       - BearerAuth: []
  *     tags:
  *       - Utilisateurs
  *     responses:
  *       200:
- *         description: Liste des utilisateurs retournée avec succès
+ *         description: Users list found successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.get('/', middleware.checkJWT, service.getAll);
+router.get("/", middleware.checkJWT, service.getAll);
 
 /**
  * @swagger
  * /users/{id}:
  *   get:
- *     summary: Récupérer un utilisateur par ID
- *     description: Retourne un utilisateur spécifique en fonction de son ID. Nécessite une authentification.
+ *     summary: Get a specific user by ID
+ *     description: Return a specific user by ID. Requires authentication.
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Utilisateurs
+ *       - Users
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de l'utilisateur à récupérer
+ *         description: User ID to retrieve
  *     responses:
  *       200:
- *         description: Utilisateur trouvé avec succès
+ *         description: User found successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       404:
- *         description: Utilisateur non trouvé
+ *         description: User not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.get('/:id', middleware.checkJWT, service.getById);
+router.get("/:id", middleware.checkJWT, service.getById);
 
 /**
  * @swagger
  * /users/add:
  *   post:
- *     summary: Ajouter un nouvel utilisateur
- *     description: Crée un nouvel utilisateur sans authentification requise.
+ *     summary: Add a new user
+ *     description: create a new user. Requires authentication and admin rights.
  *     tags:
- *       - Utilisateurs
+ *       - Users
  *     requestBody:
  *       required: true
  *       content:
@@ -86,31 +86,35 @@ router.get('/:id', middleware.checkJWT, service.getById);
  *                 example: "123456"
  *     responses:
  *       201:
- *         description: Utilisateur créé avec succès
+ *         description: User created successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Unauthorized - Admin rights required
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
+router.post("/add", middleware.checkJWT, middleware.checkAdmin, service.add);
 
 /**
  * @swagger
  * /users/update/{id}:
  *   patch:
- *     summary: Mettre à jour un utilisateur
- *     description: Met à jour les informations d'un utilisateur existant. Nécessite une authentification.
+ *     summary: Update a user
+ *     description: Update an existing user. Requires authentication.
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Utilisateurs
+ *       - Users
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de l'utilisateur à mettre à jour
+ *         description: User ID to update
  *     requestBody:
  *       required: true
  *       content:
@@ -126,55 +130,60 @@ router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
  *                 example: "jane@example.com"
  *     responses:
  *       200:
- *         description: Utilisateur mis à jour avec succès
+ *         description: User updated successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       404:
- *         description: Utilisateur non trouvé
+ *         description: User not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.patch('/update/:id', middleware.checkJWT, service.update);
+router.patch("/update/:id", middleware.checkJWT, service.update);
 
 /**
  * @swagger
  * /users/delete/{id}:
  *   delete:
- *     summary: Supprimer un utilisateur
- *     description: Supprime un utilisateur existant. Nécessite une authentification.
+ *     summary: Delete a user
+ *     description: Delete an existing user. Requires authentication and admin rights.
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Utilisateurs
+ *       - Users
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de l'utilisateur à supprimer
+ *         description: User ID to delete
  *     responses:
  *       200:
- *         description: Utilisateur supprimé avec succès
+ *         description: User deleted successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       404:
- *         description: Utilisateur non trouvé
+ *         description: User not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.delete('/delete/:id', middleware.checkJWT, middleware.checkAdmin, service.delete);
+router.delete(
+  "/delete/:id",
+  middleware.checkJWT,
+  middleware.checkAdmin,
+  service.delete
+);
 
 /**
  * @swagger
  * /users/authenticate:
  *   post:
- *     summary: Authentifier un utilisateur
- *     description: Vérifie les identifiants de l'utilisateur et retourne un token JWT en cas de succès.
+ *     summary: Authenticate a user
+ *     description: Verify user credentials and return a JWT token.
  *     tags:
- *       - Authentification
+ *       - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -190,20 +199,20 @@ router.delete('/delete/:id', middleware.checkJWT, middleware.checkAdmin, service
  *                 example: "password123"
  *     responses:
  *       200:
- *         description: Authentification réussie, token JWT retourné
- *       400:
- *         description: Identifiants invalides
+ *         description: Authentication successful, JWT token returned
+ *       400:   
+ *         description: Invalid data
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.post('/authenticate', service.authenticate);
+router.post("/authenticate", service.authenticate);
 
 /**
  * @swagger
  * /users/lessons/{lessonId}/complete:
  *   patch:
- *     summary: Marquer une leçon comme complétée
- *     description: Permet à un utilisateur authentifié de marquer une leçon comme terminée.
+ *     summary: Mark a lesson as completed
+ *     description: Mark a specific lesson as completed for the authenticated user.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -214,27 +223,31 @@ router.post('/authenticate', service.authenticate);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la leçon à marquer comme complétée
+ *         description: Lesson ID to mark as completed
  *     responses:
  *       200:
- *         description: Leçon marquée comme complétée avec succès
+ *         description: Lesson marked as completed successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       404:
- *         description: Leçon non trouvée
+ *         description: Lesson not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.patch('/lessons/:lessonId/complete', middleware.checkJWT, service.markLessonAsCompleted);
+router.patch(
+  "/lessons/:lessonId/complete",
+  middleware.checkJWT,
+  service.markLessonAsCompleted
+);
 
 /**
  * @swagger
  * /users/register:
  *   post:
- *     summary: Inscrire un nouvel utilisateur
- *     description: Permet à un utilisateur de s'inscrire en fournissant son email et son mot de passe.
+ *     summary: Register a new user
+ *     description: Register a new user and send a confirmation email.
  *     tags:
- *       - Authentification
+ *       - Authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -250,37 +263,37 @@ router.patch('/lessons/:lessonId/complete', middleware.checkJWT, service.markLes
  *                 example: "securepassword"
  *     responses:
  *       201:
- *         description: Inscription réussie, email de confirmation envoyé
+ *         description: Registration successful, confirmation email sent
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.post('/register', service.registerUser);
+router.post("/register", service.registerUser);
 
 /**
  * @swagger
  * /users/confirm/{token}:
  *   get:
- *     summary: Confirmer l'inscription d'un utilisateur
- *     description: Vérifie le token d'inscription et active le compte utilisateur.
+ *     summary: Confirm registration
+ *     description: Verify the registration token and confirm the user registration.
  *     tags:
- *       - Authentification
+ *       - Authentication
  *     parameters:
  *       - in: path
  *         name: token
  *         required: true
  *         schema:
  *           type: string
- *         description: Token de confirmation d'inscription
+ *         description: Registration token to verify
  *     responses:
  *       200:
- *         description: Inscription confirmée avec succès
+ *         description: Registration confirmed successfully
  *       400:
- *         description: Token invalide ou expiré
+ *         description: Invalid token
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
-router.get('/confirm/:token', service.confirmRegistration);
+router.get("/confirm/:token", service.confirmRegistration);
 
 export default router;

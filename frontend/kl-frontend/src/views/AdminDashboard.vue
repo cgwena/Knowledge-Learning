@@ -1,6 +1,6 @@
 <template>
   <div class="admin-dashboard">
-    <!-- Gestion des utilisateurs -->
+    <!-- User management -->
     <div class="user-management">
       <h2>Gestion des utilisateurs</h2>
       <form @submit.prevent="handleUserSubmit">
@@ -26,14 +26,14 @@
       </div>
     </div>
 
-    <!-- Gestion des thèmes -->
+    <!-- Themes management -->
     <div class="theme-management">
       <h2>Ajout d'un thème</h2>
       <form @submit.prevent="handleThemeSubmit">
-        <!-- Champ pour le thème -->
+        <!-- Field for the theme -->
         <input v-model="themeForm.title" placeholder="Nom du thème" required />
 
-        <!-- Champs pour les cursus -->
+       <!-- Field for the cursus -->
         <div
           v-for="(cursus, cursusIndex) in cursusForm.cursus"
           :key="'cursus-' + cursusIndex"
@@ -45,7 +45,7 @@
             Supprimer
           </button>
 
-          <!-- Champs pour les leçons -->
+          <!-- Field for the lessons -->
           <div
             v-for="(lesson, lessonIndex) in cursus.lessons"
             :key="'lesson-' + lessonIndex"
@@ -74,18 +74,18 @@
             </button>
           </div>
 
-          <!-- Bouton pour ajouter une nouvelle leçon -->
+          <!-- Button to add a new lesson-->
           <button type="button" @click="addLessonToCursus(cursusIndex)">
             Ajouter une leçon
           </button>
         </div>
 
-        <!-- Bouton pour ajouter un cursus -->
+        <!-- Button to add a cursus -->
         <button type="button" @click="addCursusToTheme">
           Ajouter un cursus
         </button>
 
-        <!-- Soumission du formulaire -->
+        <!-- Submit button -->
         <button type="submit">Ajouter le thème</button>
       </form>
 
@@ -201,7 +201,7 @@ export default {
       }
     },
     async handleUserSubmit() {
-      const cleanUserForm = { ...this.userForm }; // Déstructure les données
+      const cleanUserForm = { ...this.userForm };
 
       try {
         if (this.isEditingUser) {
@@ -234,7 +234,6 @@ export default {
       this.fetchUsers();
     },
 
-    // Gestion des thèmes
     async fetchThemes() {
       try {
         const response = await getThemes();
@@ -302,9 +301,6 @@ export default {
           }
         }
 
-        // Étape 2 : Enregistrer chaque cursus avec les leçons associées
-
-        // Étape 3 : Enregistrer le thème avec les cursus associés
         try {
           await addTheme({
             title: this.themeForm.title,
@@ -318,10 +314,8 @@ export default {
           throw new Error("Échec de l'enregistrement du thème.");
         }
 
-        // Réinitialiser le formulaire après la soumission
         this.resetForm();
 
-        // Rafraîchir la liste des thèmes
         await this.fetchThemes();
       } catch (error) {
         console.error("Erreur globale :", error);
@@ -329,12 +323,10 @@ export default {
     },
 
     resetForm() {
-      // Réinitialisation du formulaire thème
       this.themeForm = {
         title: "",
       };
 
-      // Réinitialisation du formulaire cursus
       this.cursusForm = {
         cursus: [
           {
@@ -350,7 +342,6 @@ export default {
         ],
       };
 
-      // Réinitialisation du formulaire leçon
       this.lessonForm = {
         lessons: [
           {
@@ -421,19 +412,17 @@ export default {
       try {
         const response = await addCursus({
           title: newCursus.title,
-          price: newCursus.price, // Récupérer les IDs des cursus
+          price: newCursus.price,
         });
         cursusToAddToTheme.push(response._id);
-        const theme = await fetchThemeById(themeId); // Assurez-vous que vous avez une fonction pour obtenir le thème
+        const theme = await fetchThemeById(themeId);
 
-        // Étape 2: Ajouter le cursus au tableau de cursus existants
         if (!theme.cursus) {
-          theme.cursus = []; // Si le tableau de cursus est vide ou non défini
+          theme.cursus = [];
         }
 
         theme.cursus.push(cursusToAddToTheme);
 
-        // Étape 3: Mettre à jour le thème
         await updateTheme(themeId, theme);
         this.fetchThemes();
 
@@ -449,20 +438,18 @@ export default {
       try {
         const response = await addLesson({
           title: newLesson.title,
-          price: newLesson.price, // Récupérer les IDs des cursus
+          price: newLesson.price,
           text: newLesson.text
         });
         lessonToAddToCursus.push(response._id);
-        const cursus = await fetchCursusById(cursusId); // Assurez-vous que vous avez une fonction pour obtenir le thème
+        const cursus = await fetchCursusById(cursusId); 
 
-        // Étape 2: Ajouter le cursus au tableau de cursus existants
         if (!cursus.lessons) {
-          cursus.lessons = []; // Si le tableau de cursus est vide ou non défini
+          cursus.lessons = [];
         }
 
         cursus.lessons.push(lessonToAddToCursus);
 
-        // Étape 3: Mettre à jour le thème
         await updateCursus(cursusId, cursus);
         this.fetchThemes();
 
@@ -472,7 +459,6 @@ export default {
       }
     },
 
-    // Réinitialisation des formulaires
     resetUserForm() {
       this.userForm = { name: "", email: "", role: "" };
       this.isEditingUser = false;
@@ -488,7 +474,6 @@ export default {
 </script>
 
 <style scoped>
-/* Styles pour le composant */
 .admin-dashboard {
   padding: 20px;
 }

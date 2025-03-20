@@ -45,7 +45,7 @@ export default {
   },
   async created() {
     try {
-      this.themes = await getThemes(); // Appel du service pour récupérer les thèmes
+      this.themes = await getThemes();
     } catch (err) {
       this.error = "Une erreur est survenue lors du chargement des thèmes.";
     }

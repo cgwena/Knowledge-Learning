@@ -89,5 +89,5 @@ export default {
 </script>
 
 <style scoped>
-/* Stylez la page selon vos besoins */
+
 </style>

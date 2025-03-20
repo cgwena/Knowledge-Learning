@@ -1,6 +1,6 @@
 import csrf from 'csurf';
 
-// Configurer le middleware CSRF
+// Configuring csrf protection
 const csrfProtection = csrf({ cookie: true });
 
 export default csrfProtection;

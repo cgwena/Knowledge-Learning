@@ -1,6 +1,6 @@
 import Lesson from "../models/lesson.js";
 
-// Ajouter une leçon
+// Add a lesson
 const add = async (req, res) => {
   const { title, text, video_url, price } = req.body;
 
@@ -10,7 +10,7 @@ const add = async (req, res) => {
 
   const created_by = req.decoded.id;
 
-  // Validation des entrées
+  // Entry validation
   if (!title) {
     return res
       .status(400)
@@ -18,7 +18,7 @@ const add = async (req, res) => {
   }
 
   try {
-    // Créer une nouvelle leçon
+    // Create a new lesson
     const newLesson = await Lesson.create({
       title,
       text,
@@ -33,7 +33,7 @@ const add = async (req, res) => {
   }
 };
 
-// Obtenir toutes les leçons
+// Get all lessons
 const getAll = async (req, res) => {
   try {
     const lessonList = await Lesson.find();
@@ -43,7 +43,7 @@ const getAll = async (req, res) => {
   }
 };
 
-// Obtenir une leçon par ID
+// Get a lesson by id
 const getById = async (req, res) => {
   const { id } = req.params;
 
@@ -58,7 +58,7 @@ const getById = async (req, res) => {
   }
 };
 
-// Mettre à jour une leçon
+// Update a lesson
 const update = async (req, res) => {
   const { id } = req.params;
   const { title, price, text, video_url } = req.body;
@@ -85,7 +85,7 @@ const update = async (req, res) => {
   }
 };
 
-// Supprimer une leçon
+// Delete a lesson
 const deleteLesson = async (req, res) => {
   const { id } = req.params;
 

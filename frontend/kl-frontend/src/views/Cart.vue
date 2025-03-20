@@ -65,7 +65,7 @@ export default {
     ...mapActions("cart", ["removeFromCart"]),
     async checkout() {
       const items = this.cartItems.map((item) => {
-        const type = item.lessons ? "cursus" : "lesson"; // Si l'objet a des leçons, c'est un cursus
+        const type = item.lessons ? "cursus" : "lesson"; 
         return {
           itemId: item._id,
           type, 
@@ -79,9 +79,8 @@ export default {
       try {
         const response = await createOrder(orderData);
 
-        // Vider le panier
         const orderId = response._id
-        // Rediriger vers la page récapitulative
+
         this.$router.push(`/payment/${orderId}`);
       } catch (error) {
         console.error("Erreur lors de la création de la commande:", error);

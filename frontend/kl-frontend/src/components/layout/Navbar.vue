@@ -34,8 +34,8 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch("auth/logout"); // Appelle l'action de déconnexion
-      this.$router.push("/login"); // Redirige vers la page de connexion après déconnexion
+      this.$store.dispatch("auth/logout");
+      this.$router.push("/login");
     },
   },
 };

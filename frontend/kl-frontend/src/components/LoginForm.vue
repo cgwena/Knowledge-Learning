@@ -57,8 +57,7 @@ export default {
           password: this.password,
         });
         if (response.token) {
-          // Le token est automatiquement géré dans Vuex et localStorage
-          this.$router.push("/themes"); // Rediriger vers la page suivante
+          this.$router.push("/themes");
         } else {
           throw new Error("Identifiants invalides.");
         }

@@ -10,7 +10,7 @@ export const getUsers = async() => {
   return response;
 }
 
-// Fonction pour récupérer les informations de l'utilisateur
+// Get user information
 export const getUserInfo = async () => {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
@@ -20,12 +20,11 @@ export const getUserInfo = async () => {
     throw new Error("Jeton ou ID utilisateur manquant.");
   }
 
-  // Requête pour récupérer les leçons
   const response = await axiosInstance.get(`http://localhost:3000/users/${userId}`);
   return response;
 };
 
-// Fonction pour s'inscrire
+// Register a new user
 export const registerUser = async (userData) => {
   const response = await axiosInstance.post("http://localhost:3000/users/register", userData);
   return response; // Retourne la réponse de l'inscription
@@ -36,13 +35,13 @@ export const confirmRegistration = async (token) => {
   return response.data;
 };
 
-// Fonction pour se connecter
+// Login user
 export const loginUser = async (email, password) => {
   const response = await axiosInstance.post("http://localhost:3000/users/authenticate", {
     email,
     password,
   });
-  return response; // Retourne la réponse de la connexion
+  return response;
 };
 
 export const addUser = async (userData) => {
@@ -60,7 +59,7 @@ export const addUser = async (userData) => {
   }
 };
 
-// Fonction pour mettre à jour les informations utilisateur
+// Update user information
 export const updateUserInfo = async (userId, userData) => {
   const token = localStorage.getItem("token");
   const response = await axiosInstance.patch(
@@ -83,17 +82,17 @@ export async function updateUserLessonsAndCursus(userId, items) {
       .filter((item) => item.type === "lesson")
       .map((item) => ({
         id: item.id,
-        data: item.data, // Remplacez par le vrai titre si disponible
-        isCompleted: false, // Définir un état par défaut ou selon votre logique
+        data: item.data, 
+        isCompleted: false, 
       }));
 
     const newCursus = items
       .filter((item) => item.type === "cursus")
       .map((item) => ({
         id: item.id,
-        data: item.data, // Remplacez par le vrai titre si disponible
-        isCompleted: false, // Définir un état par défaut ou selon votre logique
-        lessons: item.data.lessons, // Ajoutez les leçons associées si nécessaire
+        data: item.data, 
+        isCompleted: false, 
+        lessons: item.data.lessons, 
       }));
 
     const userResponse = await axiosInstance.get(`http://localhost:3000/users/${userId}`, {
@@ -105,11 +104,9 @@ export async function updateUserLessonsAndCursus(userId, items) {
     const existingLessons = userResponse.lessons || [];
     const existingCursus = userResponse.cursus || [];
 
-    // Fusionner les anciennes et nouvelles données
     const updatedLessons = [...existingLessons, ...newLessons];
     const updatedCursus = [...existingCursus, ...newCursus];
 
-    // Requête API pour mettre à jour l'utilisateur
     const response = await axiosInstance.patch(
       `http://localhost:3000/users/update/${userId}`,
       {
@@ -122,13 +119,14 @@ export async function updateUserLessonsAndCursus(userId, items) {
         },
       }
     );
-    return response; // Retourne l'utilisateur mis à jour
+    return response;
   } catch (error) {
     console.error("Erreur lors de la mise à jour des données utilisateur :", error);
     throw error;
   }
 }
 
+// Mark a lesson as completed
 export async function markLessonAsCompleted(lessonId) {
   const token = localStorage.getItem("token");
   console.log(lessonId)
@@ -147,7 +145,7 @@ export async function markLessonAsCompleted(lessonId) {
   }
 }
 
-// Fonction pour supprimer un compte utilisateur
+// Delete a user
 export const deleteUser = async (userId) => {
   const token = localStorage.getItem("token");
   const response = await axiosInstance.del(`http://localhost:3000/users/delete/${userId}`,
@@ -157,5 +155,5 @@ export const deleteUser = async (userId) => {
       },
     }
   );
-  return response; // Retourne la réponse après la suppression du compte
+  return response;
 };

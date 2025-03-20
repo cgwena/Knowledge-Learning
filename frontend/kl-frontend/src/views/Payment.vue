@@ -56,7 +56,6 @@ export default {
   methods: {
     async handlePayOrder() {
       try {
-        // Récupérer l'URL de paiement depuis Stripe
         const response = await payOrder(this.order._id, this.order.items);
         console.log('response', response);
         window.location.href = response.url;
@@ -98,7 +97,7 @@ export default {
           }
         })
       );
-      // Met à jour les items enrichis dans la commande
+
       this.order.items = enrichedItems;
     },
   },

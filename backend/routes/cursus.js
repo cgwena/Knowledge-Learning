@@ -8,26 +8,26 @@ import middleware from "../middlewares/private.js";
  * @swagger
  * tags:
  *   name: Cursus
- *   description: API pour gérer les cursus
+ *   description: API to manage cursus.
  */
 
 /**
  * @swagger
  * /cursus/:
  *   get:
- *     summary: Récupérer tous les cursus
- *     description: Retourne la liste de tous les cursus disponibles.
+ *     summary: get all cursus
+ *     description: return all cursus
  *     security:
  *       - BearerAuth: []
  *     tags:
  *       - Cursus
  *     responses:
  *       200:
- *         description: Liste des cursus retournée avec succès
+ *         description: Cursus list found successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       500:
- *         description: Erreur interne du serveur
+ *         description: server internal error
  */
 router.get("/", middleware.checkJWT, service.getAll);
 
@@ -35,8 +35,8 @@ router.get("/", middleware.checkJWT, service.getAll);
  * @swagger
  * /cursus/{id}:
  *   get:
- *     summary: Récupérer un cursus par ID
- *     description: Retourne un cursus spécifique en fonction de son ID.
+ *     summary: Get a specific cursus by ID
+ *     description: return a specific cursus by ID
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -47,16 +47,16 @@ router.get("/", middleware.checkJWT, service.getAll);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID du cursus à récupérer
+ *         description: Cursus ID
  *     responses:
  *       200:
- *         description: Cursus trouvé avec succès
+ *         description: Cursus found successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       404:
- *         description: Cursus non trouvé
+ *         description: Cursus not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.get("/:id", middleware.checkJWT, service.getById);
 
@@ -64,8 +64,8 @@ router.get("/:id", middleware.checkJWT, service.getById);
  * @swagger
  * /cursus/add:
  *   post:
- *     summary: Ajouter un nouveau cursus
- *     description: Crée un nouveau cursus. Nécessite des permissions administratives.
+ *     summary: Add a new cursus
+ *     description: Create a new cursus. Requires admin permissions.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -79,21 +79,21 @@ router.get("/:id", middleware.checkJWT, service.getById);
  *             properties:
  *               name:
  *                 type: string
- *                 example: "Cursus Informatique"
+ *                 example: "Informatique"
  *               description:
  *                 type: string
  *                 example: "Formation avancée en informatique"
  *     responses:
  *       201:
- *         description: Cursus créé avec succès
+ *         description: Cursus created successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Permission administrateur requise
+ *         description: Unauthorized - Admin permission required
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.post("/add", middleware.checkJWT, middleware.checkAdmin, service.add);
 
@@ -101,8 +101,8 @@ router.post("/add", middleware.checkJWT, middleware.checkAdmin, service.add);
  * @swagger
  * /cursus/{id}:
  *   put:
- *     summary: Mettre à jour un cursus
- *     description: Met à jour les informations d'un cursus existant. Nécessite des permissions administratives.
+ *     summary: Update a cursus
+ *     description: Update an existing cursus. Requires admin permissions.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -113,7 +113,7 @@ router.post("/add", middleware.checkJWT, middleware.checkAdmin, service.add);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID du cursus à mettre à jour
+ *         description: Cursus ID
  *     requestBody:
  *       required: true
  *       content:
@@ -123,23 +123,23 @@ router.post("/add", middleware.checkJWT, middleware.checkAdmin, service.add);
  *             properties:
  *               name:
  *                 type: string
- *                 example: "Cursus Mise à jour"
+ *                 example: "Cursus Mis à jour"
  *               description:
  *                 type: string
  *                 example: "Nouvelle description du cursus"
  *     responses:
  *       200:
- *         description: Cursus mis à jour avec succès
+ *         description: Cursus updated successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Permission administrateur requise
+ *         description: Unauthorized - Admin permission required
  *       404:
- *         description: Cursus non trouvé
+ *         description: Cursus not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.put("/:id", middleware.checkJWT, middleware.checkAdmin, service.update);
 
@@ -147,8 +147,8 @@ router.put("/:id", middleware.checkJWT, middleware.checkAdmin, service.update);
  * @swagger
  * /cursus/{id}:
  *   delete:
- *     summary: Supprimer un cursus
- *     description: Supprime un cursus existant. Nécessite des permissions administratives.
+ *     summary: Delete a cursus
+ *     description: Delete a specific cursus by ID. Requires admin permissions.
  *     security:
  *       - BearerAuth: []
  *     tags:
@@ -159,18 +159,18 @@ router.put("/:id", middleware.checkJWT, middleware.checkAdmin, service.update);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID du cursus à supprimer
+ *         description: Cursus ID
  *     responses:
  *       200:
- *         description: Cursus supprimé avec succès
+ *         description: Cursus deleted successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Permission administrateur requise
+ *         description: Unauthorized - Admin permission required
  *       404:
- *         description: Cursus non trouvé
+ *         description: Cursus not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.delete("/:id", middleware.checkJWT, middleware.checkAdmin, service.delete);
 

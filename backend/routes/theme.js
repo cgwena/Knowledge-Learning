@@ -7,23 +7,23 @@ import middleware from '../middlewares/private.js';
 /**
  * @swagger
  * tags:
- *   name: Thèmes
- *   description: API pour gérer les thèmes et cursus
+ *   name: Themes
+ *   description: API to manage themes.
  */
 
 /**
  * @swagger
  * /theme/:
  *   get:
- *     summary: Récupérer tous les thèmes
- *     description: Retourne la liste de tous les thèmes disponibles.
+ *     summary: Get all themes
+ *     description: Return all themes. Requires authentication via JWT.
  *     tags:
- *       - Thèmes
+ *       - Themes
  *     responses:
  *       200:
- *         description: Liste des thèmes retournée avec succès
+ *         description: Themes list found successfully
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.get('/', service.getAll);
 
@@ -31,28 +31,28 @@ router.get('/', service.getAll);
  * @swagger
  * /theme/{id}:
  *   get:
- *     summary: Récupérer un thème par ID
- *     description: Retourne un thème spécifique en fonction de son ID. Nécessite une authentification.
+ *     summary: Get a specific theme by ID
+ *     description: Return a specific theme by ID. Requires authentication via JWT.
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Thèmes
+ *       - Themes
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID du thème à récupérer
+ *         description: Theme ID to retrieve
  *     responses:
  *       200:
- *         description: Thème trouvé avec succès
+ *         description: Theme found successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       404:
- *         description: Thème non trouvé
+ *         description: Theme not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.get('/:id', middleware.checkJWT, service.getById);
 
@@ -60,12 +60,12 @@ router.get('/:id', middleware.checkJWT, service.getById);
  * @swagger
  * /theme/add:
  *   post:
- *     summary: Ajouter un nouveau thème
- *     description: Crée un nouveau thème. Nécessite une authentification et des droits administrateurs.
+ *     summary: Add a new theme
+ *     description: Create a new theme. Requires authentication via JWT and admin rights.
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Thèmes
+ *       - Themes
  *     requestBody:
  *       required: true
  *       content:
@@ -78,15 +78,15 @@ router.get('/:id', middleware.checkJWT, service.getById);
  *                 example: "Développement Web"
  *     responses:
  *       201:
- *         description: Thème créé avec succès
+ *         description: Theme created successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Droits administrateurs requis
+ *         description: Unauthorized - Admin rights required
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
 
@@ -94,19 +94,19 @@ router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
  * @swagger
  * /theme/{id}:
  *   put:
- *     summary: Mettre à jour un thème
- *     description: Met à jour les informations d'un thème existant. Nécessite une authentification et des droits administrateurs.
+ *     summary: Update a theme
+ *     description: Update an existing theme. Requires authentication via JWT and admin rights.
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Thèmes
+ *       - Themes
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID du thème à mettre à jour
+ *         description: Theme ID to update
  *     requestBody:
  *       required: true
  *       content:
@@ -119,17 +119,17 @@ router.post('/add', middleware.checkJWT, middleware.checkAdmin, service.add);
  *                 example: "Développement Mobile"
  *     responses:
  *       200:
- *         description: Thème mis à jour avec succès
+ *         description: Theme updated successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Droits administrateurs requis
+ *         description: Unauthorized - Admin rights required
  *       404:
- *         description: Thème non trouvé
+ *         description: Theme not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.put('/:id', middleware.checkJWT, middleware.checkAdmin, service.update);
 
@@ -137,30 +137,30 @@ router.put('/:id', middleware.checkJWT, middleware.checkAdmin, service.update);
  * @swagger
  * /theme/{id}:
  *   delete:
- *     summary: Supprimer un thème
- *     description: Supprime un thème existant. Nécessite une authentification et des droits administrateurs.
+ *     summary: Delete a theme
+ *     description: Delete an existing theme. Requires authentication via JWT and admin rights.
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Thèmes
+ *       - Themes
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID du thème à supprimer
+ *         description: Theme ID to delete
  *     responses:
  *       200:
- *         description: Thème supprimé avec succès
+ *         description: Theme deleted successfully
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Droits administrateurs requis
+ *         description: Unauthorized - Admin rights required
  *       404:
- *         description: Thème non trouvé
+ *         description: Theme not found
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.delete('/:id', middleware.checkJWT, middleware.checkAdmin, service.delete);
 
@@ -168,12 +168,12 @@ router.delete('/:id', middleware.checkJWT, middleware.checkAdmin, service.delete
  * @swagger
  * /theme/add-cursus:
  *   post:
- *     summary: Ajouter un cursus à un thème
- *     description: Ajoute un cursus à un thème existant. Nécessite des droits administrateurs.
+ *     summary: Add a cursus to a theme
+ *     description: Add a cursus to a theme. Requires authentication via JWT and admin rights.
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Thèmes
+ *       - Themes
  *     requestBody:
  *       required: true
  *       content:
@@ -189,15 +189,15 @@ router.delete('/:id', middleware.checkJWT, middleware.checkAdmin, service.delete
  *                 example: "654321"
  *     responses:
  *       200:
- *         description: Cursus ajouté au thème avec succès
+ *         description: Cursus added to theme successfully
  *       400:
- *         description: Données invalides
+ *         description: Invalid data
  *       401:
- *         description: Non autorisé - Token invalide ou manquant
+ *         description: Unauthorized - Invalid or missing token
  *       403:
- *         description: Accès interdit - Droits administrateurs requis
+ *         description: Unauthorized - Admin rights required
  *       500:
- *         description: Erreur interne du serveur
+ *         description: Server internal error
  */
 router.post('/add-cursus', middleware.checkAdmin, service.addCursusToTheme);
 
