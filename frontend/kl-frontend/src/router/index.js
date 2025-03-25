@@ -42,13 +42,14 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: DashBoard, 
-    //meta: { requiresAuth: true }, 
+    // meta: {
+    //   requiresAuth: true,
+    // },
   },
   {
     path: '/certifications',
     name: 'Certifications',
     component: Certifications, 
-    //meta: { requiresAuth: true }, 
   },
   {
     path: '/login',

@@ -2,7 +2,7 @@ import axiosInstance from "../services/axios";
 
 export const getUsers = async() => {
   const token = localStorage.getItem("token");
-  const response = await axiosInstance.get(`http://localhost:3000/users/`, {
+  const response = await axiosInstance.get(`/users/`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -20,24 +20,24 @@ export const getUserInfo = async () => {
     throw new Error("Jeton ou ID utilisateur manquant.");
   }
 
-  const response = await axiosInstance.get(`http://localhost:3000/users/${userId}`);
+  const response = await axiosInstance.get(`/users/${userId}`);
   return response;
 };
 
 // Register a new user
 export const registerUser = async (userData) => {
-  const response = await axiosInstance.post("http://localhost:3000/users/register", userData);
+  const response = await axiosInstance.post("/users/register", userData);
   return response; // Retourne la réponse de l'inscription
 };
 
 export const confirmRegistration = async (token) => {
-  const response = await axiosInstance.get(`http://localhost:3000/users/confirm/${token}`);
+  const response = await axiosInstance.get(`/users/confirm/${token}`);
   return response.data;
 };
 
 // Login user
 export const loginUser = async (email, password) => {
-  const response = await axiosInstance.post("http://localhost:3000/users/authenticate", {
+  const response = await axiosInstance.post("/users/authenticate", {
     email,
     password,
   });
@@ -47,7 +47,7 @@ export const loginUser = async (email, password) => {
 export const addUser = async (userData) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axiosInstance.post("http://localhost:3000/users/add", userData, {
+    const response = await axiosInstance.post("/users/add", userData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -63,7 +63,7 @@ export const addUser = async (userData) => {
 export const updateUserInfo = async (userId, userData) => {
   const token = localStorage.getItem("token");
   const response = await axiosInstance.patch(
-    `http://localhost:3000/users/update/${userId}`,
+    `/users/update/${userId}`,
     userData,
     {
       headers: {
@@ -95,7 +95,7 @@ export async function updateUserLessonsAndCursus(userId, items) {
         lessons: item.data.lessons, 
       }));
 
-    const userResponse = await axiosInstance.get(`http://localhost:3000/users/${userId}`, {
+    const userResponse = await axiosInstance.get(`/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -108,7 +108,7 @@ export async function updateUserLessonsAndCursus(userId, items) {
     const updatedCursus = [...existingCursus, ...newCursus];
 
     const response = await axiosInstance.patch(
-      `http://localhost:3000/users/update/${userId}`,
+      `/users/update/${userId}`,
       {
         lessons: updatedLessons,
         cursus: updatedCursus,
@@ -129,9 +129,8 @@ export async function updateUserLessonsAndCursus(userId, items) {
 // Mark a lesson as completed
 export async function markLessonAsCompleted(lessonId) {
   const token = localStorage.getItem("token");
-  console.log(lessonId)
   try {
-    const response = await axiosInstance.patch(`http://localhost:3000/users/lessons/${lessonId}/complete`
+    const response = await axiosInstance.patch(`/users/lessons/${lessonId}/complete`
       ,{},
       {
       headers: {
@@ -148,7 +147,7 @@ export async function markLessonAsCompleted(lessonId) {
 // Delete a user
 export const deleteUser = async (userId) => {
   const token = localStorage.getItem("token");
-  const response = await axiosInstance.del(`http://localhost:3000/users/delete/${userId}`,
+  const response = await axiosInstance.del(`/users/delete/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

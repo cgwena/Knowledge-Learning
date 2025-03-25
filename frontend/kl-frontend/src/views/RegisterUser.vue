@@ -1,4 +1,5 @@
 <template>
+  <Navbar />
   <div class="register">
     <h1>Créer un compte</h1>
     <form @submit.prevent="registerUser">
@@ -41,9 +42,14 @@
 </template>
 
 <script>
+import Navbar from "@/components/layout/Navbar.vue";
 import { registerUser } from "@/services/user.service";
 
 export default {
+  name: "RegisterUser",
+  components: {
+    Navbar,
+  },
   data() {
     return {
       name: "",

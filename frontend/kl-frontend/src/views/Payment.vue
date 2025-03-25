@@ -1,4 +1,5 @@
 <template>
+  <NavBar />
   <div class="order-recap">
     <NavBar />
     <main>
@@ -27,6 +28,7 @@
   </div>
 </template>
 <script>
+import NavBar from "@/components/layout/Navbar.vue";
 import ActionButton from "@/components/ActionButton.vue";
 import { getOrderById, payOrder } from "@/services/order.service";
 import { fetchCursusById, fetchLessonById } from "@/services/lesson.service";
@@ -35,6 +37,7 @@ import { fetchCursusById, fetchLessonById } from "@/services/lesson.service";
 export default {
   name: "OrderRecap",
   components: {
+    NavBar,
     ActionButton,
   },
   data() {
@@ -57,7 +60,6 @@ export default {
     async handlePayOrder() {
       try {
         const response = await payOrder(this.order._id, this.order.items);
-        console.log('response', response);
         window.location.href = response.url;
 
       } catch (error) {
@@ -108,5 +110,15 @@ export default {
 <style scoped>
 .order-recap {
   padding: 20px;
+}
+
+li {
+  list-style: none;
+  color: var(--color4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+  width: 130%;
 }
 </style>
