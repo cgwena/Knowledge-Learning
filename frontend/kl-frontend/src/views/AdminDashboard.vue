@@ -1,4 +1,5 @@
 <template>
+  <Navbar />
   <div class="admin-dashboard">
     <!-- User management -->
     <div class="user-management">
@@ -112,6 +113,7 @@
 </template>
 
 <script>
+import Navbar from "@/components/layout/Navbar.vue";
 import AdminThemeCard from "@/components/admin/AdminThemeCard.vue";
 import {
   getUsers,
@@ -136,6 +138,7 @@ import {
 
 export default {
   components: {
+    Navbar,
     AdminThemeCard,
   },
   data() {
@@ -195,7 +198,7 @@ export default {
     async fetchUsers() {
       try {
         const response = await getUsers();
-        this.users = response.data;
+        this.users = response;
       } catch (error) {
         console.error("Erreur lors de la récupération des utilisateurs", error);
       }

@@ -67,7 +67,6 @@ export default {
   methods: {
     ...mapActions("cart", ["addToCart", "removeFromCart"]),
     async handleAddToCart(item) {
-      console.log('handleAddToCart appelée');
       try {
         // Récupérer l'utilisateur et ses leçons
         const user = this.$store.getters["auth/getUser"];
@@ -80,8 +79,6 @@ export default {
         }
 
         const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-
-        console.log("cartItems:", cartItems, "Type:", typeof cartItems);
 
         const isInCart = cartItems.some(
           (cartItem) => cartItem._id === item._id

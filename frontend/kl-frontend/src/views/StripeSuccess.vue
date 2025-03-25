@@ -1,6 +1,6 @@
 <template>
   <NavBar />
-  <div>
+  <div class="success-page">
     <h1>Merci pour votre paiement !</h1>
   </div>
 </template>
@@ -26,9 +26,11 @@ export default {
         return;
       }
 
-      const response = await axios.put(`http://localhost:3000/orders/${orderId}`, {"status": "completed"}); 
-      console.log('response:', response)
-      const order = response
+      const response = await axios.put(
+        `http://localhost:3000/orders/${orderId}`,
+        { status: "completed" }
+      );
+      const order = response;
 
       const itemData = await Promise.all(
         order.items.map(async (item) => {
@@ -39,7 +41,6 @@ export default {
             } else if (item.type === "lesson") {
               data = await fetchLessonById(item.itemId);
             }
-            console.log('data:', data)
             return {
               id: item.itemId,
               type: item.type,
@@ -55,7 +56,6 @@ export default {
           }
         })
       );
-      console.log('itemData:', itemData)
 
       if (itemData.length === 0) {
         console.error("Aucun item valide à ajouter à l'utilisateur.");
@@ -67,13 +67,8 @@ export default {
         console.error("Utilisateur non trouvé.");
         return;
       }
-      console.log('user:', user)
 
-      const updatedUser = await updateUserLessonsAndCursus(
-        user._id,
-        itemData
-      );
-      console.log('updatedUser:', updatedUser)
+      const updatedUser = await updateUserLessonsAndCursus(user._id, itemData);
 
       this.$store.commit("SET_USER", updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -85,3 +80,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.success-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+</style>

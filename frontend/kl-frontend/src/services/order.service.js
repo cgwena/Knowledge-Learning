@@ -22,8 +22,6 @@ export const getOrderByUser = async (userId) => {
 };
 
 export const payOrder = async (orderId, products) => {
-  console.log("Produits envoyés au backend :", products);
-  console.log('orderId', orderId)
   try {
     const response = await axiosInstance.post(`${stripeApiUrl}`, {
       orderId: orderId,

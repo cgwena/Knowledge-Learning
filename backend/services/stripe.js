@@ -3,9 +3,6 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const createCheckoutSession = async (orderId, products, stripeInstance = stripe) => {
-  console.log("createCheckoutSession appelée");
-  console.log("Produits reçus par le backend :", products);
-
   try {
     const lineItems = products.map((product) => {
       if (!product.title || !product.price) {
@@ -23,8 +20,6 @@ export const createCheckoutSession = async (orderId, products, stripeInstance = 
         quantity: 1,
       };
     });
-
-    console.log("line_items envoyés à Stripe :", JSON.stringify(lineItems, null, 2));
 
     const session = await stripeInstance.checkout.sessions.create({
       payment_method_types: ["card"],

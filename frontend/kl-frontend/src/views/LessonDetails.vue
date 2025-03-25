@@ -1,4 +1,5 @@
 <template>
+  <Navbar />
   <div v-if="lesson" class="lesson-details">
     <h1>{{ lesson.title }}</h1>
     <p v-if="lesson.text">{{ lesson.text }}</p>
@@ -18,13 +19,16 @@
 </template>
 
 <script>
+import Navbar from "@/components/layout/Navbar.vue";
 import ActionButton from "@/components/ActionButton.vue";
 import { fetchLessonById } from "@/services/lesson.service";
 import { markLessonAsCompleted } from "@/services/user.service";
+import { toast } from "vue3-toastify";
 
 export default {
   name: "LessonDetails",
   components: {
+    Navbar,
     ActionButton,
   },
   props: {
@@ -52,6 +56,7 @@ export default {
       try {
         await markLessonAsCompleted(this.lesson._id);
         this.lesson.isCompleted = true;
+        toast.success("Leçon validée !");
       } catch (err) {
         console.error("Erreur lors de la validation de la leçon :", err);
       }
@@ -63,7 +68,8 @@ export default {
 <style scoped>
 .lesson-details {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 100px auto 0 auto;
+  
   padding: 20px;
 }
 video {
