@@ -42,14 +42,17 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: DashBoard, 
-    // meta: {
-    //   requiresAuth: true,
-    // },
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/certifications',
     name: 'Certifications',
     component: Certifications, 
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/login',
@@ -60,17 +63,26 @@ const routes = [
     path: "/cart",
     name: "cart",
     component: Cart,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/payment/:orderId",
     name: "orderRecap",
     component: OrderRecap,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/lesson/:id",
     name: "LessonDetails",
     component: LessonDetails,
     props: true,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/cancel",
@@ -92,11 +104,7 @@ const routes = [
     name: 'admin',
     component: AdminDashboard,
     beforeEnter: (to, from, next) => {
-      console.log('Admin route guard');
-      console.log('store.getters:', store.getters);
-      console.log('store.state.auth.user:', store.state.auth?.user);
-      console.log('store.getters["auth/isAdmin"]:', store.getters["auth/isAdmin"]);
-      
+      // Check if the user is authenticated and has admin role      
       if (store.getters["auth/isAdmin"]) {
         next();
       } else {
