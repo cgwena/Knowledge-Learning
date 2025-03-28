@@ -91,13 +91,18 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: AdminDashboard,
-    // beforeEnter: (to, from, next) => {
-    //   if (store.getters.isAdmin) {
-    //     next(); 
-    //   } else {
-    //     next({ name: 'Home' }); 
-    //   }
-    // },
+    beforeEnter: (to, from, next) => {
+      console.log('Admin route guard');
+      console.log('store.getters:', store.getters);
+      console.log('store.state.auth.user:', store.state.auth?.user);
+      console.log('store.getters["auth/isAdmin"]:', store.getters["auth/isAdmin"]);
+      
+      if (store.getters["auth/isAdmin"]) {
+        next();
+      } else {
+        next({ name: 'Home' });
+      }
+    },
   }
 ];
 
