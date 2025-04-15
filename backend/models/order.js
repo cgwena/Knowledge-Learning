@@ -9,11 +9,10 @@ const OrderSchema = new Schema(
       {
         type: {
           type: String,
-          enum: ["lesson", "cursus"], // Le type d'achat : leçon ou cursus
+          enum: ["lesson", "cursus"],
           required: true,
         },
-        itemId: { type: Schema.Types.ObjectId, required: true }, // ID de la leçon ou du cursus
-        // price: { type: Number, required: true }, // Prix de l'item
+        itemId: { type: Schema.Types.ObjectId, required: true },
       },
     ],
     totalPrice: { type: Number, required: true },
