@@ -54,7 +54,7 @@ nav {
 }
 
 img {
-  height: 48px;
+  height: 128px;
   border-radius: 16px;
   margin-left: 16px;
 }
