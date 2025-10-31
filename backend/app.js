@@ -1,3 +1,5 @@
+console.log('Checkpoint 3: Fichier app.js en cours de lecture...');
+
 import createError from "http-errors";
 import express from "express";
 import path from "path";
@@ -38,20 +40,20 @@ const swaggerOptions = {
   apis: ["./routes/*.js"],
 };
 
-// Détermine le répertoire courant avec import.meta.url
+// Use the URL constructor to get the current file path   
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 import indexRouter from "./routes/index.js";
 
-// Corrigez l'importation ici
-import clientDbInitConnection from "./db/mongo.js"; // Import de la fonction directement
+console.log('Checkpoint 4: Connexion à la base de données sur ' + process.env.DATABASE_URL);
 
-// Initialisation de la connexion à la DB
+import clientDbInitConnection from "./db/mongo.js"; 
+// Uploading the environment variables
 clientDbInitConnection()
   .catch((err) => {
     console.error('Failed to connect to MongoDB:', err);
-    process.exit(1); // Optionnel : arrête le process si tu veux éviter de démarrer sans DB
+    process.exit(1);
   });
 
 
@@ -115,4 +117,5 @@ app.use(function (err, req, res, next) {
   res.json({ message: err.message });
 });
 
+console.log('Checkpoint 6: Fichier app.js lu en entier. Exportation de l\'app...');
 export default app;

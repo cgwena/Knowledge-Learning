@@ -2,7 +2,7 @@
   <div class="cursus-card"> 
     
     <h3>{{ cursus.title }} ({{ cursus.price }} €)</h3>
-    <!-- Llist of lessons -->
+    <!-- List of lessons -->
     <LessonList
       :lessons="cursus.lessons"
       @add-to-cart="$emit('add-to-cart', $event)"

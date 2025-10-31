@@ -8,7 +8,7 @@ const checkJWT = (req, res, next) => {
 
     // Verification of the format of the token
     if (token && token.startsWith('Bearer ')) {
-      token = token.slice(7, token.length); // Retire le "Bearer " du token
+      token = token.slice(7, token.length); 
     }
 
     if (!token) {
@@ -47,7 +47,7 @@ const checkJWT = (req, res, next) => {
 const checkAdmin = (req, res, next) => {
   // Verification of the role of the user
   if (req.decoded && req.decoded.role === 'admin') {
-    return next(); // Si l'utilisateur est un admin, passe à la route suivante
+    return next();
   } else {
     return res
       .status(403)

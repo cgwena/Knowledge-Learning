@@ -477,16 +477,134 @@ export default {
 </script>
 
 <style scoped>
+/* == MOBILE-FIRST (Styles par défaut) ==
+   Styles pour les petits écrans
+*/
+
 .admin-dashboard {
   padding: 20px;
+  /* Espace pour la navbar mobile (supposons 80px) + 20px de padding */
+  padding-top: 100px;
+  width: 100%;
+  box-sizing: border-box; /* Important pour width: 100% */
 }
 
-button {
-  margin-left: 10px;
-}
-
+/* Style de base (de votre code) */
 li {
   list-style: none;
   text-decoration: none;
 }
+
+/* --- Formulaires (Mobile) --- */
+/* Forcer l'empilement vertical */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espace entre les champs */
+}
+
+/* Les champs de saisie prennent toute la largeur */
+input,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px; /* Améliore la lisibilité */
+}
+
+/* --- Boutons (Mobile) --- */
+button {
+  /* On supprime votre "margin-left: 10px" qui pose problème sur mobile */
+  margin: 5px 0 0 0; /* Une petite marge en haut */
+  cursor: pointer;
+  padding: 8px; /* Améliore le clic */
+}
+
+/* --- Blocs imbriqués (Mobile) --- */
+.cursus-input,
+.lesson-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px dashed #ccc; /* Hiérarchie visuelle */
+}
+
+.lesson-input {
+  margin-left: 15px; /* Indentation */
+}
+
+/* --- Liste des utilisateurs (Mobile) --- */
+/* C'est le changement le plus important */
+.user-management li {
+  display: flex;
+  flex-direction: column; /* Empiler l'info et les boutons */
+  align-items: flex-start;
+  gap: 10px;
+  
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 1px solid #eee; /* Séparation visuelle */
+}
+
+.user-management li button {
+   margin: 0 10px 0 0; /* Marge à DROITE sur mobile */
+   width: auto; /* Les boutons n'ont pas besoin de faire 100% */
+}
+
+
+/* == DESKTOP (Restauration de vos styles d'origine) ==
+   À partir de 768px, on annule tout ce qu'on a fait pour mobile
+   pour retrouver votre affichage d'origine.
+*/
+@media (min-width: 768px) {
+  
+  .admin-dashboard {
+    /* (Hauteur nav desktop 16vh + 20px padding) */
+    padding-top: calc(16vh + 20px); 
+    width: auto; /* Annule width: 100% */
+  }
+
+  form {
+    display: block; /* Annule flex-direction: column */
+  }
+
+  input,
+  textarea {
+    width: auto; /* Annule width: 100% */
+    padding: 1px; /* Retour au style navigateur par défaut */
+  }
+
+  button {
+    margin: 0 0 0 10px; /* RESTAURE votre règle d'origine */
+    width: auto;
+    padding: 1px; /* Retour au style navigateur par défaut */
+  }
+
+  /* --- Blocs imbriqués (Desktop) --- */
+  .cursus-input,
+  .lesson-input {
+    display: block;
+    padding: 0;
+    margin-top: 0;
+    border: none;
+  }
+
+  .lesson-input {
+    margin-left: 0;
+  }
+  
+  /* --- Liste des utilisateurs (Desktop) --- */
+  .user-management li {
+    display: block; /* Annule flex-direction: column */
+    padding: 0;
+    margin-bottom: 0;
+    border: none;
+  }
+  
+  .user-management li button {
+     margin: 0 0 0 10px; /* RESTAURE votre règle d'origine */
+  }
+}
 </style>
+

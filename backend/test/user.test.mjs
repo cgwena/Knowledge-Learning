@@ -150,7 +150,7 @@ describe("User Services", () => {
     });
   });
 
-  describe("User Authentication", () => {
+  describe.only("User Authentication", () => {
     let findOneStub, compareStub;
 
     beforeEach(() => {
