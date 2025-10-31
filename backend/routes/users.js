@@ -20,7 +20,7 @@ import middleware from "../middlewares/private.js";
  *     security:
  *       - BearerAuth: []
  *     tags:
- *       - Utilisateurs
+ *       - Users
  *     responses:
  *       200:
  *         description: Users list found successfully

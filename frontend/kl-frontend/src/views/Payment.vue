@@ -1,31 +1,28 @@
 <template>
   <NavBar />
-  <div class="order-recap">
-    <NavBar />
-    <main>
-      <h1>Récapitulatif de votre commande</h1>
+  <main>
+    <h1>Récapitulatif de votre commande</h1>
 
-      <div v-if="!order">
-        <p>Chargement...</p>
-      </div>
+    <div v-if="!order">
+      <p>Chargement...</p>
+    </div>
 
-      <div v-else>
-        <h2>Commande n° {{ order._id }}</h2>
-        <ul>
-          <li v-for="item in order.items" :key="item.itemId">
-            {{ item.title }} - {{ item.price }} €
-          </li>
-        </ul>
-        <h3>Total : {{ order.totalPrice }} €</h3>
-        <ActionButton
-          class="button"
-          btnColor="primary"
-          textContent="Payer"
-          @click="handlePayOrder(order._id)"
-        />
-      </div>
-    </main>
-  </div>
+    <div v-else class="order-details">
+      <h2>Commande n° {{ order._id }}</h2>
+      <ul>
+        <li v-for="item in order.items" :key="item.itemId">
+          {{ item.title }} - {{ item.price }} €
+        </li>
+      </ul>
+      <h3>Total : {{ order.totalPrice }} €</h3>
+      <ActionButton
+        class="button"
+        btnColor="primary"
+        textContent="Payer"
+        @click="handlePayOrder(order._id)"
+      />
+    </div>
+  </main>
 </template>
 <script>
 import NavBar from "@/components/layout/Navbar.vue";
@@ -61,7 +58,6 @@ export default {
       try {
         const response = await payOrder(this.order._id, this.order.items);
         window.location.href = response.url;
-
       } catch (error) {
         console.error("Erreur lors du paiement :", error);
         alert("Une erreur est survenue lors du paiement.");
@@ -84,7 +80,7 @@ export default {
               _id: details._id,
               title: details.title,
               price: details.price,
-              lessons : details.lessons
+              lessons: details.lessons,
             };
           } catch (error) {
             console.error(
@@ -106,15 +102,19 @@ export default {
 };
 </script>
 
-
 <style scoped>
-.order-recap {
-  padding: 20px;
+.order-details {
+  border: 2px solid var(--color3);
+  border-radius: 16px;
+  background-color: var(--color2);
+  margin: 24px;
+  padding: 16px;
+  color: var(--color1);
 }
 
 li {
   list-style: none;
-  color: var(--color4);
+  color: var(--color);
   display: flex;
   justify-content: space-between;
   align-items: center;

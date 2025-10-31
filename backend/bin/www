@@ -14,12 +14,17 @@ import http from 'http';
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
+console.log('Checkpoint 1: Fichier ./bin/www en cours d\'exécution. Tentative de création du serveur...');
+
+
 /**
  * Create HTTP server.
  */
 
 var server = http.createServer(app);
 
+// ET CELLE-CI
+console.log('Checkpoint 2: Serveur créé. Tentative de .listen() sur le port ' + port);
 /**
  * Listen on provided port, on all network interfaces.
  */

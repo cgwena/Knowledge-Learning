@@ -53,6 +53,10 @@ li {
   justify-content: space-between;
   align-items: center;
   font-size: 1.2rem;
-  width: 130%;
+  width: 80%;
+}
+
+ul {
+  width: 100%;
 }
 </style>
